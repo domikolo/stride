@@ -61,8 +61,9 @@ async function sendMessage(query) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, conversation_id: sessionId })
     });
-    const text = await res.text();
-    addMessage(text, 'assistant');
+    const data = await res.json();
+    const answer = typeof data === 'string' ? data : data.answer ?? JSON.stringify(data);
+    addMessage(answer, 'assistant');
   } catch {
     addMessage('Błąd połączenia', 'assistant');
   }
