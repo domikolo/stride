@@ -9,7 +9,7 @@ body { font-family: Arial, sans-serif; }
   transform: translate(50%,-50%);
   width: 35px;
   height: 120px;
-  background: #4141f5;
+  background: #0C5F33;
   border: 2px solid transparent;
   border-radius: 20px;
   cursor: pointer;
@@ -22,7 +22,7 @@ body { font-family: Arial, sans-serif; }
 }
 #open-btn:hover{
   background: #fff;
-  border-color: #4141f5;
+  border-color: #0C5F33;
 }
 #open-btn:hover .dots,
 #open-btn:hover .dots::before{
@@ -132,11 +132,11 @@ body { font-family: Arial, sans-serif; }
 #chat-widget {
   position: fixed;
   top: 50%;
-  right: 10%;
+  right: 20%;
   transform: translate(50%, -50%);
-  width: 500px;
-  height: 800px;
-  background: #eee;
+  width: 333px;
+  height: 533px;
+  background: #0C5F33;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -147,7 +147,7 @@ body { font-family: Arial, sans-serif; }
 #chat-widget.hidden { display: none; }
 
 .widget-header {
-  background: #4141f5;
+  background: #0C5F33;
   color: #fff;
   text-align: center;
   padding: 12px 0;
@@ -168,16 +168,16 @@ body { font-family: Arial, sans-serif; }
 }
 .message.user {
   align-self: flex-end;
-  background: #9bd0f5;
-  color: #222;
+  background: #fff;
+  color: #666;
   border-radius: 15px;
   padding: 6px 10px;
   max-width: 80%;
 }
 .message.assistant {
   align-self: flex-start;
-  background: #9bd0f5;
-  color: #222;
+  background: #fff;
+  color: #666;
   border-radius: 15px;
   padding: 6px 10px;
   max-width: 80%;
