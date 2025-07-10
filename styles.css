@@ -1,0 +1,220 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; }
+
+/* --- przycisk otwarcia --- */
+#open-btn{
+  position: fixed;
+  top: 50%;
+  right: 2%;
+  transform: translate(50%,-50%);
+  width: 35px;
+  height: 120px;
+  background: #4141f5;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 2000;
+  pointer-events: auto;
+  overflow: visible;
+  position: fixed;
+}
+#open-btn:hover{
+  background: #fff;
+  border-color: #4141f5;
+}
+#open-btn:hover .dots,
+#open-btn:hover .dots::before{
+  opacity: 1;
+}
+#open-btn .dots{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#open-btn .dots::before{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 24px;
+  height: 64px;
+  background: #d9ddf4;
+  border-radius: 12px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#open-btn .dots span{
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 4px 0; /* 8px total gap between dots */
+  background: #babaff;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+
+.phone-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 24px;
+  margin-right: 8px;
+  background: #4141f5;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+}
+.phone-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* --- callout --- */
+.callout {
+  position: fixed;
+  top: 50%;
+  right: calc(2% + 35px);
+  padding: 10px 16px;
+  background: #dddddd;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(20px);
+  opacity: 0;
+  z-index: 1000;
+  animation: callout-exit 0.5s forwards;
+}
+.callout--visible {
+  animation: callout-enter 0.5s forwards;
+}
+
+.callout-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #000;
+  width: 0;
+}
+.callout--visible .callout-text {
+  animation: typing 3s steps(30) forwards, blink 1s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes blink {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: #000; }
+}
+@keyframes callout-enter {
+  from { opacity:0; transform: translateY(-50%) translateX(20px); }
+  to { opacity:1; transform: translateY(-50%) translateX(0); }
+}
+@keyframes callout-exit {
+  from { opacity:1; transform: translateY(-50%) translateX(0); }
+  to { opacity:0; transform: translateY(-50%) translateX(20px); }
+}
+
+/* --- widget --- */
+#chat-widget {
+  position: fixed;
+  top: 50%;
+  right: 10%;
+  transform: translate(50%, -50%);
+  width: 250px;
+  height: 400px;
+  background: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 999;
+}
+#chat-widget.hidden { display: none; }
+
+.widget-header {
+  background: #4141f5;
+  color: #fff;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 18px;
+  border-radius: 8px 8px 0 0;
+}
+
+.widget-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.message.user {
+  align-self: flex-end;
+  background: #9bd0f5;
+  color: #222;
+  border-radius: 15px;
+  padding: 6px 10px;
+  max-width: 80%;
+}
+.message.assistant {
+  align-self: flex-start;
+  background: #9bd0f5;
+  color: #222;
+  border-radius: 15px;
+  padding: 6px 10px;
+  max-width: 80%;
+}
+
+.widget-footer {
+  padding: 12px;
+  background: #ddd;
+  border-radius: 0 0 8px 8px;
+}
+#message-form { display: flex; align-items: center; }
+#user-input {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+}
+.send-btn {
+  background: none;
+  border: none;
+  color: #777;
+  margin-left: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-btn svg {
+  fill: currentColor;
+}
+
+@keyframes tada {
+  0%,100% { transform: translate(50%, -50%) rotate(0deg); }
+  10%,20% { transform: translate(50%, -50%) rotate(-3deg); }
+  30%,50%,70%,90% { transform: translate(50%, -50%) rotate(3deg); }
+  40%,60%,80% { transform: translate(50%, -50%) rotate(-3deg); }
+}
+#open-btn.tada { animation: tada 1s; }

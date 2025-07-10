@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Widget</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <button id="open-btn" aria-label="Otwórz czat">
+    <span class="dots" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </span>
+  </button>
+
+  <div id="chat-widget" class="hidden">
+    <div class="widget-header">Chat</div>
+    <div class="widget-body">
+      <div id="messages" class="messages"></div>
+    </div>
+    <div class="widget-footer">
+      <form id="message-form">
+        <a href="https://www.innovationsoftware.pl/kontakt" class="phone-link" aria-label="Kontakt telefoniczny">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24c1.12.37 2.33.57 3.54.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 21 3 13.93 3 5.5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.21.2 2.42.57 3.54a1 1 0 01-.25 1.05l-2.2 2.2z"/>
+          </svg>
+        </a>
+        <input type="text" id="user-input" placeholder="Napisz wiadomość..." autocomplete="off" />
+        <button type="submit" class="send-btn" aria-label="Wyślij wiadomość">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="chat.js"></script>
+</body>
+</html>
