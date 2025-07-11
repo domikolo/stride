@@ -59,10 +59,14 @@ function addMessage(text, type) {
   div.innerHTML = `<p>${formattedText}</p>`;
   messages.appendChild(div);
   
-  // Auto-scroll do najnowszej wiadomości
-  setTimeout(() => {
-    messages.scrollTop = messages.scrollHeight;
-  }, 100);
+  // Auto-scroll do najnowszej wiadomości - natychmiast i po krótkim opóźnieniu
+  scrollToBottom();
+  setTimeout(scrollToBottom, 50);
+  setTimeout(scrollToBottom, 200);
+}
+
+function scrollToBottom() {
+  messages.scrollTop = messages.scrollHeight;
 }
 
 function showTypingIndicator() {
@@ -72,9 +76,8 @@ function showTypingIndicator() {
   messages.appendChild(typingDiv);
   
   // Auto-scroll do typing indicator
-  setTimeout(() => {
-    messages.scrollTop = messages.scrollHeight;
-  }, 100);
+  scrollToBottom();
+  setTimeout(scrollToBottom, 50);
   
   return typingDiv;
 }
@@ -82,6 +85,8 @@ function showTypingIndicator() {
 function hideTypingIndicator(typingDiv) {
   if (typingDiv && typingDiv.parentNode) {
     typingDiv.remove();
+    // Auto-scroll po ukryciu typing indicator
+    setTimeout(scrollToBottom, 50);
   }
 }
 
