@@ -165,6 +165,20 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   line-height: 1.4;
   box-shadow: 0 2px 8px rgba(12, 95, 51, 0.2);
 }
+
+.message.user p {
+  margin: 0 0 8px 0;
+}
+
+.message.user p:last-child {
+  margin-bottom: 0;
+}
+
+.message.user br {
+  display: block;
+  content: "";
+  margin-top: 4px;
+}
 .message.assistant {
   align-self: flex-start;
   background: #ffffff;
@@ -176,6 +190,20 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   line-height: 1.4;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   border: 1px solid #e2e8f0;
+}
+
+.message.assistant p {
+  margin: 0 0 8px 0;
+}
+
+.message.assistant p:last-child {
+  margin-bottom: 0;
+}
+
+.message.assistant br {
+  display: block;
+  content: "";
+  margin-top: 4px;
 }
 
 .widget-footer {
@@ -200,6 +228,13 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(12, 95, 51, 0.1);
 }
+
+#user-input:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 .send-btn {
   background: linear-gradient(135deg, #0C5F33, #0a4a2a);
   border: none;
@@ -217,6 +252,18 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 .send-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(12, 95, 51, 0.3);
+}
+
+.send-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.send-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .send-btn svg {

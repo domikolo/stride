@@ -37,6 +37,9 @@ const sessionKey = 'sessionId';
 let sessionId = localStorage.getItem(sessionKey) || crypto.randomUUID();
 localStorage.setItem(sessionKey, sessionId);
 
+// Anti-spam - blokada wysyłania wiadomości podczas oczekiwania na odpowiedź
+let isWaitingForResponse = false;
+
 openBtn.addEventListener('click', () => {
   widget.classList.toggle('hidden');
   if (!widget.classList.contains('hidden')) {
@@ -47,9 +50,19 @@ openBtn.addEventListener('click', () => {
 function addMessage(text, type) {
   const div = document.createElement('div');
   div.className = `message ${type}`;
-  div.textContent = text;
+  
+  // Formatowanie tekstu - zamiana podwójnych enterów na akapity
+  const formattedText = text
+    .replace(/\n\n/g, '</p><p>')  // Podwójne enter na nowy akapit
+    .replace(/\n/g, '<br>');       // Pojedyncze enter na nową linię
+  
+  div.innerHTML = `<p>${formattedText}</p>`;
   messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+  
+  // Auto-scroll do najnowszej wiadomości
+  setTimeout(() => {
+    messages.scrollTop = messages.scrollHeight;
+  }, 100);
 }
 
 function showTypingIndicator() {
@@ -57,7 +70,12 @@ function showTypingIndicator() {
   typingDiv.className = 'typing-indicator';
   typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
   messages.appendChild(typingDiv);
-  messages.scrollTop = messages.scrollHeight;
+  
+  // Auto-scroll do typing indicator
+  setTimeout(() => {
+    messages.scrollTop = messages.scrollHeight;
+  }, 100);
+  
   return typingDiv;
 }
 
@@ -68,6 +86,20 @@ function hideTypingIndicator(typingDiv) {
 }
 
 async function sendMessage(query) {
+  // Sprawdź czy już czekamy na odpowiedź
+  if (isWaitingForResponse) {
+    return;
+  }
+  
+  // Zablokuj wysyłanie kolejnych wiadomości
+  isWaitingForResponse = true;
+  input.disabled = true;
+  input.placeholder = 'Czekam na odpowiedź...';
+  
+  // Zablokuj przycisk wysyłania
+  const sendButton = document.querySelector('.send-btn');
+  sendButton.disabled = true;
+  
   addMessage(query, 'user');
   input.value = '';
   
@@ -87,6 +119,17 @@ async function sendMessage(query) {
   } catch {
     hideTypingIndicator(typingIndicator);
     addMessage('Błąd połączenia', 'assistant');
+  } finally {
+    // Odblokuj wysyłanie wiadomości
+    isWaitingForResponse = false;
+    input.disabled = false;
+    input.placeholder = 'Napisz wiadomość...';
+    
+    // Odblokuj przycisk wysyłania
+    const sendButton = document.querySelector('.send-btn');
+    sendButton.disabled = false;
+    
+    input.focus();
   }
 }
 
