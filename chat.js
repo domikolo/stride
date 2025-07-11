@@ -52,9 +52,27 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
+function showTypingIndicator() {
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'typing-indicator';
+  typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  messages.appendChild(typingDiv);
+  messages.scrollTop = messages.scrollHeight;
+  return typingDiv;
+}
+
+function hideTypingIndicator(typingDiv) {
+  if (typingDiv && typingDiv.parentNode) {
+    typingDiv.remove();
+  }
+}
+
 async function sendMessage(query) {
   addMessage(query, 'user');
   input.value = '';
+  
+  const typingIndicator = showTypingIndicator();
+  
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -63,8 +81,11 @@ async function sendMessage(query) {
     });
     const data = await res.json();
     const answer = typeof data === 'string' ? data : data.answer ?? JSON.stringify(data);
+    
+    hideTypingIndicator(typingIndicator);
     addMessage(answer, 'assistant');
   } catch {
+    hideTypingIndicator(typingIndicator);
     addMessage('Błąd połączenia', 'assistant');
   }
 }
