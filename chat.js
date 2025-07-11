@@ -40,10 +40,19 @@ localStorage.setItem(sessionKey, sessionId);
 // Anti-spam - blokada wysyłania wiadomości podczas oczekiwania na odpowiedź
 let isWaitingForResponse = false;
 
+// Ukrywanie strzałki "ZAPYTAJ AI" po kliknięciu przycisku czatu lub strzałki
+const aboutArrow = document.getElementById('about-arrow');
+if (aboutArrow) {
+  aboutArrow.addEventListener('click', () => {
+    aboutArrow.style.display = 'none';
+  });
+}
+
 openBtn.addEventListener('click', () => {
   widget.classList.toggle('hidden');
   if (!widget.classList.contains('hidden')) {
     callout.classList.remove('callout--visible');
+    if (aboutArrow) aboutArrow.style.display = 'none';
   }
 });
 

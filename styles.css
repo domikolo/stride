@@ -624,6 +624,129 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   box-shadow: 0 4px 12px rgba(12, 95, 51, 0.3);
 }
 
+/* --- O nas --- */
+.about-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 36px;
+  position: relative;
+}
+
+.about-lead {
+  font-size: 1.5rem;
+  color: #0C5F33;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  max-width: 700px;
+}
+
+.about-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f8fafc;
+  border: 2px solid #0C5F33;
+  border-radius: 16px;
+  padding: 10px 24px 8px 24px;
+  box-shadow: 0 2px 8px rgba(12,95,51,0.08);
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+  position: relative;
+  z-index: 2;
+  animation: bounceArrow 1.5s infinite;
+}
+
+.about-arrow:hover {
+  background: #e2e8f0;
+  border-color: #0a4a2a;
+}
+
+.arrow-text {
+  color: #0C5F33;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+  letter-spacing: 1px;
+}
+
+.arrow-icon {
+  font-size: 2rem;
+  color: #0C5F33;
+  margin-top: -2px;
+}
+
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.about-section {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 32px 28px;
+  margin-bottom: 0;
+}
+
+.about-section h3 {
+  color: #0C5F33;
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.about-section p,
+.about-section ul,
+.about-section ol {
+  color: #1a202c;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.about-section ul,
+.about-section ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.about-section li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .about-content {
+    padding: 0 8px;
+  }
+  .about-section {
+    padding: 24px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-lead {
+    font-size: 1.1rem;
+    max-width: 95vw;
+  }
+  .about-section {
+    padding: 16px 2px;
+  }
+  .about-arrow {
+    padding: 8px 10px 6px 10px;
+    font-size: 0.95rem;
+  }
+}
+
 /* Responsywność */
 @media (max-width: 768px) {
   .site-header .container {
