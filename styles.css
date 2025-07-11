@@ -134,8 +134,8 @@ body { font-family: Arial, sans-serif; }
   top: 50%;
   right: 20%;
   transform: translate(50%, -50%);
-  width: 333px;
-  height: 533px;
+  width: 500px;
+  height: 600px;
   background: #0C5F33;
   border-radius: 8px;
   overflow: hidden;
