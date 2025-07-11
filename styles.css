@@ -64,22 +64,6 @@ body { font-family: Arial, sans-serif; }
   z-index: 1;
 }
 
-
-.phone-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 24px;
-  margin-right: 8px;
-  background: #4141f5;
-  color: #fff;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 16px;
-}
-.phone-link svg { width: 16px; height: 16px; fill: currentColor; }
-
 /* --- callout --- */
 .callout {
   position: fixed;
@@ -132,11 +116,11 @@ body { font-family: Arial, sans-serif; }
 #chat-widget {
   position: fixed;
   top: 50%;
-  right: 20%;
+  right: 17%;
   transform: translate(50%, -50%);
   width: 500px;
   height: 600px;
-  background: #0C5F33;
+  background: #eee;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -160,6 +144,7 @@ body { font-family: Arial, sans-serif; }
   padding: 10px;
   overflow-y: auto;
   scroll-behavior: smooth;
+  background: #dddddd;
 }
 .messages {
   display: flex;
@@ -168,16 +153,16 @@ body { font-family: Arial, sans-serif; }
 }
 .message.user {
   align-self: flex-end;
-  background: #fff;
-  color: #666;
+  background: #cccccc;
+  color: #000;
   border-radius: 15px;
   padding: 6px 10px;
   max-width: 80%;
 }
 .message.assistant {
   align-self: flex-start;
-  background: #fff;
-  color: #666;
+  background: #cccccc;
+  color: #000;
   border-radius: 15px;
   padding: 6px 10px;
   max-width: 80%;
