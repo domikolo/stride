@@ -7,7 +7,125 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Strona główna -->
+  <div class="main-page">
+    <header class="site-header">
+      <div class="container">
+        <h1 class="logo">Stride Services</h1>
+        <nav class="nav">
+          <a href="#home" class="nav-link active" data-tab="home">Strona główna</a>
+          <a href="#about" class="nav-link" data-tab="about">O nas</a>
+          <a href="#contact" class="nav-link" data-tab="contact">Kontakt</a>
+        </nav>
+      </div>
+    </header>
 
+    <main class="main-content">
+      <div class="container">
+        <!-- Strona główna -->
+        <section id="home" class="tab-content active">
+          <h2>Witamy w Stride Services</h2>
+          <p>Jesteśmy firmą specjalizującą się w nowoczesnych rozwiązaniach technologicznych. Oferujemy kompleksowe usługi w zakresie rozwoju oprogramowania, konsultacji IT oraz wdrażania innowacyjnych rozwiązań.</p>
+          <div class="features">
+            <div class="feature">
+              <h3>🚀 Innowacyjność</h3>
+              <p>Stawiamy na najnowsze technologie i kreatywne rozwiązania.</p>
+            </div>
+            <div class="feature">
+              <h3>💼 Profesjonalizm</h3>
+              <p>Doświadczony zespół ekspertów gotowy do realizacji Twoich projektów.</p>
+            </div>
+            <div class="feature">
+              <h3>🤝 Współpraca</h3>
+              <p>Budujemy długoterminowe relacje oparte na zaufaniu i jakości.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- O nas -->
+        <section id="about" class="tab-content">
+          <h2>O nas</h2>
+          <p>Stride Services to dynamiczna firma technologiczna z wieloletnim doświadczeniem w branży IT. Nasza misja to dostarczanie innowacyjnych rozwiązań, które napędzają rozwój naszych klientów.</p>
+          
+          <div class="about-grid">
+            <div class="about-item">
+              <h3>Nasza Historia</h3>
+              <p>Założona w 2020 roku, Stride Services szybko stała się uznanym partnerem w dziedzinie technologii. Rozpoczęliśmy jako mały zespół pasjonatów, a dziś jesteśmy firmą zatrudniającą ekspertów z różnych dziedzin IT.</p>
+            </div>
+            
+            <div class="about-item">
+              <h3>Nasze Wartości</h3>
+              <ul>
+                <li>Innowacyjność w każdym projekcie</li>
+                <li>Jakość ponad wszystko</li>
+                <li>Transparentność w relacjach</li>
+                <li>Stały rozwój i uczenie się</li>
+              </ul>
+            </div>
+            
+            <div class="about-item">
+              <h3>Nasze Usługi</h3>
+              <ul>
+                <li>Rozwój aplikacji webowych i mobilnych</li>
+                <li>Konsultacje technologiczne</li>
+                <li>Wdrażanie systemów CRM</li>
+                <li>Optymalizacja procesów biznesowych</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Kontakt -->
+        <section id="contact" class="tab-content">
+          <h2>Kontakt</h2>
+          <p>Skontaktuj się z nami, aby omówić Twój projekt lub uzyskać więcej informacji o naszych usługach.</p>
+          
+          <div class="contact-grid">
+            <div class="contact-info">
+              <h3>Dane kontaktowe</h3>
+              <div class="contact-item">
+                <strong>📧 Email:</strong>
+                <a href="mailto:kontakt@stride-services.pl">kontakt@stride-services.pl</a>
+              </div>
+              <div class="contact-item">
+                <strong>📞 Telefon:</strong>
+                <a href="tel:+48123456789">+48 123 456 789</a>
+              </div>
+              <div class="contact-item">
+                <strong>📍 Adres:</strong>
+                <p>ul. Przykładowa 123<br>00-000 Warszawa, Polska</p>
+              </div>
+              <div class="contact-item">
+                <strong>🕒 Godziny pracy:</strong>
+                <p>Poniedziałek - Piątek: 9:00 - 17:00</p>
+              </div>
+            </div>
+            
+            <div class="contact-form">
+              <h3>Wyślij wiadomość</h3>
+              <form class="contact-form-element">
+                <div class="form-group">
+                  <label for="name">Imię i nazwisko</label>
+                  <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="message">Wiadomość</label>
+                  <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Wyślij wiadomość</button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Widget czatu -->
   <button id="open-btn" aria-label="Otwórz czat">
     <span class="dots" aria-hidden="true">
       <span></span><span></span><span></span>

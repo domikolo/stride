@@ -102,3 +102,45 @@ input.addEventListener('keydown', e => {
     form.dispatchEvent(new Event('submit'));
   }
 });
+
+// --- Obsługa zakładek ---
+const navLinks = document.querySelectorAll('.nav-link');
+const tabContents = document.querySelectorAll('.tab-content');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    // Usuń aktywną klasę ze wszystkich linków
+    navLinks.forEach(l => l.classList.remove('active'));
+    
+    // Ukryj wszystkie zakładki
+    tabContents.forEach(tab => tab.classList.remove('active'));
+    
+    // Dodaj aktywną klasę do klikniętego linku
+    link.classList.add('active');
+    
+    // Pokaż odpowiednią zakładkę
+    const targetTab = link.getAttribute('data-tab');
+    document.getElementById(targetTab).classList.add('active');
+  });
+});
+
+// --- Obsługa formularza kontaktowego ---
+const contactForm = document.querySelector('.contact-form-element');
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(contactForm);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const message = formData.get('message');
+    
+    // Tutaj możesz dodać logikę wysyłania formularza
+    alert(`Dziękujemy za wiadomość, ${name}! Skontaktujemy się z Tobą wkrótce.`);
+    
+    // Wyczyść formularz
+    contactForm.reset();
+  });
+}
