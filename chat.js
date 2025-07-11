@@ -53,6 +53,8 @@ openBtn.addEventListener('click', () => {
   if (!widget.classList.contains('hidden')) {
     callout.classList.remove('callout--visible');
     if (aboutArrow) aboutArrow.style.display = 'none';
+  } else {
+    if (aboutArrow) aboutArrow.style.display = '';
   }
 });
 
