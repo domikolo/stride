@@ -407,9 +407,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 .about-arrow {
   position: fixed !important;
   top: 170px !important;
-  left: 5vw !important;
-  width: 90vw !important;
-  max-width: 1200px !important;
+  right: 24px !important;
+  left: auto !important;
+  width: 420px !important;
+  max-width: 90vw !important;
   z-index: 9999 !important;
   display: flex !important;
   align-items: center !important;
@@ -420,7 +421,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   cursor: pointer !important;
   animation: none !important;
   pointer-events: auto !important;
-  justify-content: flex-start !important;
+  justify-content: flex-end !important;
 }
 .about-arrow .arrow-text {
   color: #0C5F33;
@@ -437,18 +438,18 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 }
 @media (max-width: 900px) {
   .about-arrow {
-    top: 120px;
-    left: 2vw;
-    width: 96vw;
-    max-width: 98vw;
+    top: 120px !important;
+    right: 10px !important;
+    width: 320px !important;
+    max-width: 98vw !important;
   }
 }
 @media (max-width: 600px) {
   .about-arrow {
-    top: 80px;
-    left: 2vw;
-    width: 96vw;
-    max-width: 98vw;
+    top: 80px !important;
+    right: 2vw !important;
+    width: 260px !important;
+    max-width: 98vw !important;
   }
   .about-arrow .arrow-text {
     font-size: 0.85rem;
