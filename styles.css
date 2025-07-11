@@ -116,9 +116,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 #chat-widget {
   position: fixed;
   top: 50%;
-  right: 8%;
+  right: 15%;
   transform: translate(50%, -50%);
-  width: 400px;
+  width: 450px;
   height: 600px;
   background: #ffffff;
   border-radius: 16px;
