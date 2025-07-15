@@ -887,20 +887,20 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 /* --- Nowa strzałka i tekst przy przycisku czatu --- */
 .ask-ai-arrow {
   position: fixed;
-  top: 48%;
-  right: 70px;
+  top: 38%;
+  right: 120px;
   z-index: 2100;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   pointer-events: none;
 }
 .ask-ai-text {
   color: #0C5F33;
   font-weight: 700;
   font-size: 1.1rem;
-  margin-bottom: 0;
-  margin-right: 8px;
+  margin-bottom: 8px;
+  margin-right: 0;
   white-space: nowrap;
 }
 .ask-ai-svg {
