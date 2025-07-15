@@ -48,13 +48,16 @@ if (aboutArrow) {
   });
 }
 
+// Ukrywanie strzałki "ZAPYTAJ AI" po kliknięciu przycisku czatu
+const askAiArrow = document.getElementById('ask-ai-arrow');
+
 openBtn.addEventListener('click', () => {
   widget.classList.toggle('hidden');
   if (!widget.classList.contains('hidden')) {
     callout.classList.remove('callout--visible');
-    if (aboutArrow) aboutArrow.style.display = 'none';
+    if (askAiArrow) askAiArrow.style.display = 'none';
   } else {
-    if (aboutArrow) aboutArrow.style.display = '';
+    if (askAiArrow) askAiArrow.style.display = '';
   }
 });
 
