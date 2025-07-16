@@ -51,13 +51,141 @@ if (aboutArrow) {
 // Ukrywanie strzałki "ZAPYTAJ AI" po kliknięciu przycisku czatu
 const askAiArrow = document.getElementById('ask-ai-arrow');
 
+const CHAT_ANIMATION_DURATION = 2000; // ms
+const CHAT_HEIGHT_SHRINK = 1000; // ms
+const CHAT_SLIDE = 1000; // ms
+const CHAT_WIDTH = 450; // px, szerokość wrappera
+const BTN_WIDTH = 35; // px, szerokość przycisku
+
+function isMobile() {
+  return window.matchMedia('(max-width: 600px)').matches;
+}
+
+function animateCloseChat() {
+  if (widget.classList.contains('hidden') || widget.classList.contains('animating')) return;
+  if (isMobile()) {
+    widget.classList.add('hidden');
+    widget.classList.remove('shrink-height', 'animating');
+    widget.style.removeProperty('height');
+    widget.style.removeProperty('transform');
+    widget.style.removeProperty('transition');
+    widget.style.removeProperty('z-index');
+    widget.style.removeProperty('width');
+    return;
+  }
+  console.log('Zamykanie czatu - animacja start');
+  widget.classList.add('animating');
+  
+  // Ukryj nagłówek i treść na początku animacji
+  const header = widget.querySelector('.widget-header');
+  const body = widget.querySelector('.widget-body');
+  const footer = widget.querySelector('.widget-footer');
+  
+  if (header) header.style.opacity = '0';
+  if (body) body.style.opacity = '0';
+  if (footer) footer.style.opacity = '0';
+  
+  // 1. Shrink height
+  widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
+  widget.style.setProperty('height', '120px', 'important');
+  console.log('Wysokość zmniejszona do 120px');
+  setTimeout(() => {
+    // 2. Slide right (tunel)
+    console.log('Rozpoczynam animację tunelu - przesuwam w prawo');
+    widget.style.setProperty('transition', 'transform 0.6s cubic-bezier(0.77,0,0.18,1)', 'important');
+    widget.style.setProperty('transform', 'translateY(-50%) translateX(40px)', 'important');
+    console.log('Transform ustawiony na translateX(40px)');
+    setTimeout(() => {
+      // 3. Shrink width to button width
+      console.log('Zwężam szerokość do szerokości przycisku');
+      widget.style.setProperty('transition', 'width 0.4s cubic-bezier(0.77,0,0.18,1)', 'important');
+      widget.style.setProperty('width', '35px', 'important');
+      setTimeout(() => {
+        console.log('Animacja tunelu zakończona - ukrywam okno');
+        widget.classList.remove('animating');
+        widget.classList.add('hidden');
+        widget.style.removeProperty('height');
+        widget.style.removeProperty('transform');
+        widget.style.removeProperty('transition');
+        widget.style.removeProperty('width');
+        // Przywróć widoczność wszystkich elementów
+        if (header) header.style.removeProperty('opacity');
+        if (body) body.style.removeProperty('opacity');
+        if (footer) footer.style.removeProperty('opacity');
+      }, 400);
+    }, 600);
+  }, 500);
+}
+
+function animateOpenChat() {
+  if (!widget.classList.contains('hidden') || widget.classList.contains('animating')) return;
+  if (isMobile()) {
+    widget.classList.remove('hidden');
+    widget.classList.remove('shrink-height', 'animating');
+    widget.style.removeProperty('height');
+    widget.style.removeProperty('transform');
+    widget.style.removeProperty('transition');
+    widget.style.removeProperty('z-index');
+    widget.style.removeProperty('width');
+    return;
+  }
+  console.log('Otwieranie czatu - animacja start');
+  widget.classList.add('animating');
+  widget.style.setProperty('height', '120px', 'important');
+  widget.style.setProperty('width', '35px', 'important');
+  widget.style.setProperty('transform', 'translateY(-50%) translateX(40px)', 'important');
+  widget.style.setProperty('transition', 'none', 'important');
+  widget.style.setProperty('z-index', '2002', 'important');
+  widget.classList.remove('hidden');
+  
+  // Ukryj wszystkie elementy na początku animacji
+  const header = widget.querySelector('.widget-header');
+  const body = widget.querySelector('.widget-body');
+  const footer = widget.querySelector('.widget-footer');
+  
+  if (header) header.style.opacity = '0';
+  if (body) body.style.opacity = '0';
+  if (footer) footer.style.opacity = '0';
+  
+  console.log('Okno ustawione na pozycję startową (niskie, wąskie, przesunięte)');
+  void widget.offsetWidth;
+  // 1. Slide left (tunel)
+  console.log('Rozpoczynam animację tunelu - przesuwam w lewo');
+  widget.style.setProperty('transition', 'transform 0.6s cubic-bezier(0.77,0,0.18,1)', 'important');
+  widget.style.setProperty('transform', 'translateY(-50%) translateX(0)', 'important');
+  console.log('Transform ustawiony na translateX(0)');
+  setTimeout(() => {
+    // 2. Expand width
+    console.log('Rozszerzam szerokość');
+    widget.style.setProperty('transition', 'width 0.4s cubic-bezier(0.77,0,0.18,1)', 'important');
+    widget.style.setProperty('width', '450px', 'important');
+    setTimeout(() => {
+      // 3. Expand height
+      console.log('Rozpoczynam animację wysokości - rozciągam');
+      widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
+      widget.style.setProperty('height', '600px', 'important');
+      setTimeout(() => {
+        console.log('Animacja zakończona');
+        widget.classList.remove('animating');
+        widget.style.removeProperty('height');
+        widget.style.removeProperty('transform');
+        widget.style.removeProperty('transition');
+        widget.style.removeProperty('width');
+        // Pokaż wszystkie elementy na końcu animacji
+        if (header) header.style.opacity = '1';
+        if (body) body.style.opacity = '1';
+        if (footer) footer.style.opacity = '1';
+      }, 500);
+    }, 400);
+  }, 600);
+}
+
 openBtn.addEventListener('click', () => {
-  widget.classList.toggle('hidden');
-  if (!widget.classList.contains('hidden')) {
+  if (widget.classList.contains('hidden')) {
+    animateOpenChat();
     callout.classList.remove('callout--visible');
-    if (askAiArrow) askAiArrow.style.display = 'none';
   } else {
-    if (askAiArrow) askAiArrow.style.display = '';
+    animateCloseChat();
   }
 });
 

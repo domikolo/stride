@@ -3,10 +3,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 
 /* --- przycisk otwarcia --- */
 #open-btn{
-  position: fixed;
-  top: 50%;
-  right: 2%;
-  transform: translate(50%,-50%);
+  position: fixed !important;
+  top: 50% !important;
+  right: 26px !important;
+  transform: translateY(-50%) !important;
   width: 35px;
   height: 120px;
   background: #0C5F33;
@@ -15,10 +15,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   cursor: pointer;
   font-size: 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  z-index: 2000;
+  z-index: 2003 !important;
   pointer-events: auto;
   overflow: visible;
-  position: fixed;
 }
 #open-btn:hover{
   background: #fff;
@@ -114,10 +113,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 
 /* --- widget --- */
 #chat-widget {
-  position: fixed;
-  top: 50%;
-  right: 15%;
-  transform: translate(50%, -50%);
+  position: fixed !important;
+  top: 50% !important;
+  right: 65px !important; /* 26px + 35px + 4px odstępu */
+  transform: translateY(-50%);
   width: 450px;
   height: 600px;
   background: #ffffff;
@@ -126,10 +125,11 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  z-index: 999;
+  z-index: 2000 !important;
   border: 1px solid #e2e8f0;
+  pointer-events: auto;
 }
-#chat-widget.hidden { display: none; }
+#chat-widget.hidden { display: none !important; }
 
 .widget-header {
   background: linear-gradient(135deg, #0C5F33, #0a4a2a);
@@ -140,6 +140,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   font-weight: 600;
   border-radius: 16px 16px 0 0;
   letter-spacing: 0.5px;
+  transition: opacity 0.3s ease;
 }
 
 .widget-body {
@@ -150,6 +151,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   background: #f8fafc;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9;
+  transition: opacity 0.3s ease;
 }
 
 .widget-body::-webkit-scrollbar {
@@ -231,6 +233,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   background: #ffffff;
   border-radius: 0 0 16px 16px;
   border-top: 1px solid #e2e8f0;
+  transition: opacity 0.3s ease;
 }
 #message-form { display: flex; align-items: center; gap: 12px; }
 #user-input {
@@ -889,7 +892,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
   position: fixed;
   top: 38%;
   right: 120px;
-  z-index: 2100;
+  z-index: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -912,6 +915,34 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Robo
 @media (max-width: 600px) {
   .ask-ai-arrow { right: 20px; }
   .ask-ai-text { font-size: 0.95rem; }
+}
+
+/* --- ANIMACJA CHAT WIDGET --- */
+#chat-widget.animating {
+  will-change: height, transform, opacity;
+  pointer-events: none;
+}
+#chat-widget.shrink-height {
+  transition: height 1s cubic-bezier(0.77,0,0.18,1);
+  height: 120px !important; /* wysokość przycisku */
+}
+
+@media (max-width: 600px) {
+  #open-btn {
+    right: 8px !important;
+    width: 35px;
+    height: 60px;
+  }
+  #chat-widget {
+    right: 8px !important;
+    width: 98vw !important;
+    height: 60vw !important;
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+  #chat-widget.shrink-height {
+    height: 60px !important;
+  }
 }
 
 /* Responsywność */
