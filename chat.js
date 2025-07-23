@@ -6,6 +6,35 @@ const form     = document.getElementById('message-form');
 const input    = document.getElementById('user-input');
 const messages = document.getElementById('messages');
 
+// Elementy polityki RODO
+const privacyCheckbox = document.getElementById('privacy-checkbox');
+const startChatBtn = document.getElementById('start-chat-btn');
+const privacySection = document.getElementById('privacy-section');
+
+// Obsługa checkboxa polityki RODO
+if (privacyCheckbox && startChatBtn) {
+  privacyCheckbox.addEventListener('change', () => {
+    startChatBtn.disabled = !privacyCheckbox.checked;
+  });
+  
+  // Obsługa przycisku "Rozpocznij czat"
+  startChatBtn.addEventListener('click', () => {
+    if (privacyCheckbox.checked) {
+      // Ukryj sekcję polityki RODO
+      privacySection.style.display = 'none';
+      
+      // Pokaż formularz wiadomości
+      form.classList.remove('hidden');
+      
+      // Dodaj powitalną wiadomość
+      addMessage('Witaj! Jestem asystentem Stride-Services. Jak mogę Ci pomóc?', 'assistant');
+      
+      // Skup się na polu input
+      input.focus();
+    }
+  });
+}
+
 // CALL-OUT logic
 const callout = document.createElement('div');
 callout.className = 'callout';
@@ -233,6 +262,11 @@ function hideTypingIndicator(typingDiv) {
 }
 
 async function sendMessage(query) {
+  // Sprawdź czy użytkownik zaakceptował politykę RODO
+  if (!privacyCheckbox || !privacyCheckbox.checked) {
+    return;
+  }
+  
   // Sprawdź czy już czekamy na odpowiedź
   if (isWaitingForResponse) {
     return;
@@ -316,21 +350,142 @@ navLinks.forEach(link => {
   });
 });
 
-// --- Obsługa formularza kontaktowego ---
-const contactForm = document.querySelector('.contact-form-element');
-if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(contactForm);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const message = formData.get('message');
-    
-    // Tutaj możesz dodać logikę wysyłania formularza
-    alert(`Dziękujemy za wiadomość, ${name}! Skontaktujemy się z Tobą wkrótce.`);
-    
-    // Wyczyść formularz
-    contactForm.reset();
+// --- Obsługa kart flip ---
+const flipCards = document.querySelectorAll('.flip-card');
+
+console.log('Znalezione karty flip:', flipCards.length);
+
+flipCards.forEach((card, index) => {
+  console.log(`Karta ${index + 1}:`, card);
+  card.addEventListener('click', () => {
+    console.log(`Kliknięto kartę ${index + 1}`);
+    card.classList.toggle('flipped');
   });
-}
+});
+
+// --- Scroll animations ---
+const scrollAnimations = () => {
+  const elements = document.querySelectorAll('.scroll-animate');
+  
+  elements.forEach(element => {
+    const elementTop = element.getBoundingClientRect().top;
+    const elementVisible = 150;
+    
+    if (elementTop < window.innerHeight - elementVisible) {
+      element.classList.add('visible');
+    }
+  });
+};
+
+// Initial check
+scrollAnimations();
+
+// Add scroll listener
+window.addEventListener('scroll', scrollAnimations);
+
+// Add floating animation to some elements
+document.addEventListener('DOMContentLoaded', () => {
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) {
+    heroTitle.classList.add('floating');
+  }
+});
+
+// --- Akordeon w sekcji o usłudze ---
+document.addEventListener('DOMContentLoaded', () => {
+  // Akordeon 'Nasza usługa' (unikalny selektor)
+  const serviceAccordionBtn = document.getElementById('service-accordion-btn');
+  const serviceAccordionContent = document.getElementById('service-accordion-content');
+  if (serviceAccordionBtn && serviceAccordionContent) {
+    serviceAccordionBtn.addEventListener('click', () => {
+      const expanded = serviceAccordionBtn.getAttribute('aria-expanded') === 'true';
+      serviceAccordionBtn.setAttribute('aria-expanded', String(!expanded));
+      serviceAccordionContent.hidden = expanded;
+      serviceAccordionBtn.querySelector('.accordion-arrow').textContent = expanded ? '▼' : '▲';
+      serviceAccordionBtn.classList.toggle('active', !expanded);
+      serviceAccordionContent.classList.toggle('open', !expanded);
+    });
+  }
+
+  // Timeline: otwieranie wszystkich kroków przy scrollu
+  const timelineSection = document.querySelector('.timeline-section');
+  const timelineSteps = document.querySelectorAll('.timeline-horizontal .timeline-step');
+  let timelineActivated = false;
+  function openAllTimelineSteps() {
+    timelineSteps.forEach(s => s.classList.add('active'));
+    timelineActivated = true;
+  }
+  function onScrollTimeline() {
+    if (timelineActivated) return;
+    const rect = timelineSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 100) {
+      openAllTimelineSteps();
+      window.removeEventListener('scroll', onScrollTimeline);
+    }
+  }
+  if (timelineSection && timelineSteps.length > 0) {
+    window.addEventListener('scroll', onScrollTimeline);
+    // Jeśli sekcja już widoczna na starcie
+    onScrollTimeline();
+  }
+});
+
+// --- Nawigacja: O nas / Kontakt ---
+document.addEventListener('DOMContentLoaded', () => {
+  // Timeline: otwieranie wszystkich kroków przy scrollu
+  const timelineSection = document.querySelector('.timeline-section');
+  const timelineSteps = document.querySelectorAll('.timeline-horizontal .timeline-step');
+  let timelineActivated = false;
+  function openAllTimelineSteps() {
+    timelineSteps.forEach(s => s.classList.add('active'));
+    timelineActivated = true;
+  }
+  function onScrollTimeline() {
+    if (timelineActivated) return;
+    const rect = timelineSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 100) {
+      openAllTimelineSteps();
+      window.removeEventListener('scroll', onScrollTimeline);
+    }
+  }
+  if (timelineSection && timelineSteps.length > 0) {
+    window.addEventListener('scroll', onScrollTimeline);
+    // Jeśli sekcja już widoczna na starcie
+    onScrollTimeline();
+  }
+
+  const aboutLink = document.querySelector('.nav-link[data-tab="about"]');
+  const contactLink = document.querySelector('.nav-link[data-tab="contact"]');
+  const heroSection = document.querySelector('.hero-scene');
+  const aboutSections = [
+    document.querySelector('.about-ai-section'),
+    document.querySelector('.about-service-section'),
+    document.querySelector('.timeline-section'),
+    document.querySelector('.benefits-costs-section'),
+    document.querySelector('.examples-section')
+  ];
+  const contactSection = document.getElementById('contact-section');
+
+  function showAbout() {
+    if (heroSection) heroSection.style.display = '';
+    aboutSections.forEach(s => s && (s.style.display = ''));
+    if (contactSection) contactSection.style.display = 'none';
+    aboutLink.classList.add('active');
+    contactLink.classList.remove('active');
+    window.scrollTo({ top: heroSection?.offsetTop || 0, behavior: 'smooth' });
+  }
+  function showContact() {
+    if (heroSection) heroSection.style.display = 'none';
+    aboutSections.forEach(s => s && (s.style.display = 'none'));
+    if (contactSection) contactSection.style.display = '';
+    aboutLink.classList.remove('active');
+    contactLink.classList.add('active');
+    window.scrollTo({ top: contactSection?.offsetTop || 0, behavior: 'smooth' });
+  }
+  if (aboutLink && contactLink && contactSection) {
+    aboutLink.addEventListener('click', e => { e.preventDefault(); showAbout(); });
+    contactLink.addEventListener('click', e => { e.preventDefault(); showContact(); });
+    // Domyślnie pokazujemy sekcje "O nas"
+    showAbout();
+  }
+});

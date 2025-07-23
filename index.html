@@ -7,84 +7,150 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="header-sharp-bg left"></div>
+  <div class="header-sharp-bg right"></div>
+  <div class="header-sharp-gap"></div>
   <!-- Strona główna -->
   <div class="main-page">
     <header class="site-header">
       <div class="container">
-        <img src="stridelogo.jpg" alt="Stride Services logo" class="logo" />
+        <img src="FO51AA85ACF83a1-01.png" alt="Stride Services logo" class="logo" />
         <nav class="nav">
           <a href="#about" class="nav-link active" data-tab="about">O nas</a>
           <a href="#contact" class="nav-link" data-tab="contact">Kontakt</a>
         </nav>
       </div>
+      <div class="cut-line-left"></div>
+      <div class="cut-line-right"></div>
     </header>
 
     <main class="main-content">
       <div class="container">
-        <!-- O nas -->
-        <section id="about" class="tab-content active">
-          <div class="about-top">
-            <h2 class="about-lead" style="font-size:1.6rem !important;">TU JEST OPISANA NASZA USŁUGA I WSZYSTKO CO TRZEBA O NAS WIEDZIEĆ, ALE KOMU BY SIĘ CHCIAŁO TO CZYTAĆ?</h2>
+        <!-- HERO -->
+        <section class="hero-scene scroll-animate">
+          <h1 class="hero-title">Przyszłość AI jest już tutaj</h1>
+          <p class="hero-subtitle">Rewolucjonizujemy sposób, w jaki firmy komunikują się z klientami dzięki inteligentnym chatbotom AI</p>
+        </section>
+        
+        <!-- O NAS / WPROWADZENIE DO AI -->
+        <section class="about-ai-section scroll-animate">
+          <div class="about-ai-content">
+            <h2>Co to są chatboty AI i dlaczego warto je wybrać?</h2>
+            <div class="about-ai-blocks">
+              <div class="about-ai-block">
+                <p>Chatboty AI to inteligentne programy komputerowe, które wykorzystują sztuczną inteligencję do prowadzenia naturalnych, ludzkich rozmów z klientami. W przeciwieństwie do standardowych chatbotów, które opierają się na sztywnych, zaprogramowanych regułach i ograniczonych scenariuszach odpowiedzi, chatboty AI rozumieją kontekst, uczą się na podstawie interakcji i potrafią odpowiadać na różnorodne pytania w sposób płynny i spersonalizowany. Dzięki temu są bardziej efektywne, elastyczne i przyjazne dla użytkownika.</p>
+              </div>
+              <div class="about-ai-diagram">
+                <!-- Schemat blokowy AI vs zwykły chatbot (SVG) -->
+                <svg viewBox="0 0 420 180" width="320" height="120" class="ai-vs-classic-diagram">
+                  <rect x="10" y="30" width="120" height="40" rx="12" fill="#0C5F33"/>
+                  <text x="70" y="55" text-anchor="middle" fill="#fff" font-size="15">Chatbot AI</text>
+                  <rect x="10" y="90" width="120" height="40" rx="12" fill="#232625"/>
+                  <text x="70" y="115" text-anchor="middle" fill="#fff" font-size="15">Chatbot zwykły</text>
+                  <rect x="290" y="60" width="120" height="40" rx="12" fill="#1de982"/>
+                  <text x="350" y="85" text-anchor="middle" fill="#232625" font-size="15">Klient</text>
+                  <polyline points="130,50 290,80" stroke="#0C5F33" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+                  <polyline points="130,110 290,80" stroke="#232625" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+                  <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+                      <path d="M0,0 L10,5 L0,10 Z" fill="#0C5F33" />
+                    </marker>
+                  </defs>
+                </svg>
+                <ul class="ai-vs-list">
+                  <li><b>Elastyczność:</b> AI analizuje pytania w czasie rzeczywistym i odpowiada na nietypowe lub złożone zapytania.</li>
+                  <li><b>Naturalność rozmowy:</b> AI prowadzi rozmowy w sposób zbliżony do ludzkiego, standardowe chatboty często brzmią mechanicznie.</li>
+                  <li><b>Uczenie się:</b> AI poprawia odpowiedzi w miarę zbierania danych, zwykłe chatboty wymagają ręcznego aktualizowania skryptów.</li>
+                  <li><b>Integracje:</b> AI integruje się z narzędziami (CRM, kalendarze, rezerwacje), zwykłe chatboty często działają w izolacji.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="about-ai-summary">
+              Wybierając chatbot AI od Stride-Services, zyskujesz narzędzie, które nie tylko automatyzuje obsługę klienta, ale także buduje lepsze relacje z użytkownikami, zwiększa sprzedaż i oszczędza Twój czas.
+            </div>
           </div>
-          <!-- Usunięto .about-arrow -->
-          <div class="about-content">
-            <section class="about-section">
-              <h3>Co to są chatboty AI i dlaczego warto je wybrać?</h3>
-              <p>Chatboty AI to inteligentne programy komputerowe, które wykorzystują sztuczną inteligencję do prowadzenia naturalnych, ludzkich rozmów z klientami. W przeciwieństwie do standardowych chatbotów, które opierają się na sztywnych, zaprogramowanych regułach i ograniczonych scenariuszach odpowiedzi, chatboty AI rozumieją kontekst, uczą się na podstawie interakcji i potrafią odpowiadać na różnorodne pytania w sposób płynny i spersonalizowany. Dzięki temu są bardziej efektywne, elastyczne i przyjazne dla użytkownika.</p>
-            </section>
-            <section class="about-section">
-              <h3>Różnice między naszymi chatbotami AI a standardowymi chatbotami</h3>
-              <ul>
-                <li><strong>Elastyczność:</strong> Standardowe chatboty działają na zasadzie predefiniowanych ścieżek (np. „jeśli klient napisze X, odpowiedz Y”), co ogranicza ich możliwości. Chatboty AI analizują pytania w czasie rzeczywistym i mogą odpowiadać na nietypowe lub złożone zapytania.</li>
-                <li><strong>Naturalność rozmowy:</strong> Chatboty AI prowadzą rozmowy w sposób zbliżony do ludzkiego, dzięki czemu klienci czują się bardziej komfortowo. Standardowe chatboty często brzmią mechanicznie i mogą frustrować użytkowników.</li>
-                <li><strong>Uczenie się:</strong> Chatboty AI poprawiają swoje odpowiedzi w miarę zbierania danych, podczas gdy standardowe chatboty wymagają ręcznego aktualizowania skryptów.</li>
-                <li><strong>Integracje:</strong> Nasze chatboty AI można zintegrować z narzędziami takimi jak CRM, kalendarze czy systemy rezerwacji, co daje im przewagę nad prostymi chatbotami, które często działają w izolacji.</li>
-              </ul>
-              <p>Wybierając chatbot AI od Stride-Services, zyskujesz narzędzie, które nie tylko automatyzuje obsługę klienta, ale także buduje lepsze relacje z użytkownikami, zwiększa sprzedaż i oszczędza Twój czas.</p>
-            </section>
-            <section class="about-section">
-              <h3>Informacje o firmie</h3>
-              <p>Stride-Services to młoda, dynamiczna firma specjalizująca się w tworzeniu spersonalizowanych chatbotów AI, które rewolucjonizują sposób, w jaki firmy komunikują się z klientami. Nasza misja to pełne zadowolenie klienta dzięki rozwiązaniom szytym na miarę, idealnie zintegrowanym z jego biznesem. Nie idziemy w masówkę – stawiamy na jakość, nie ilość. Nasze chatboty są ograniczone tylko przez kod, co daje niemal nieograniczone możliwości.</p>
-              <ul>
-                <li><strong>Zespół:</strong> Dominik Oczki – główny programista i specjalista AI</li>
-                <li><strong>Zespół:</strong> Jakub Płaczek – ekspert od współpracy z klientami i współzałożyciel</li>
-              </ul>
-              <p>Razem łączymy pasję do AI z doświadczeniem w tej szybko rozwijającej się dziedzinie, widząc w niej przyszłość biznesu.</p>
-            </section>
-            <section class="about-section">
-              <h3>Usługi</h3>
-              <ul>
-                <li>Chatboty AI automatyzujące obsługę klienta</li>
-                <li>Integracje z kalendarzami, Excelem, systemami rezerwacji i innymi narzędziami</li>
-                <li>Umawianie spotkań, zbieranie danych klientów</li>
-                <li>Zaawansowane funkcje: infolinie AI, automatyczne rozmowy telefoniczne (w planach)</li>
-                <li>Dedykowane dla firm usługowych: IT, edukacja, zdrowie, finanse, consulting</li>
-                <li>Każdy chatbot projektowany indywidualnie pod potrzeby klienta</li>
-                <li>Nowoczesne technologie AI</li>
-              </ul>
-            </section>
-            <section class="about-section">
-              <h3>Proces współpracy</h3>
-              <ol>
-                <li><strong>Analiza potrzeb:</strong> Dokładnie analizujemy Twoje potrzeby i strukturę firmy, by zapewnić pełną integrację.</li>
-                <li><strong>Projektowanie:</strong> Zwykle trwa 2-3 tygodnie, w stałym kontakcie z klientem.</li>
-                <li><strong>Realizacja:</strong> Proste projekty – ok. 2 tygodnie, złożone z integracjami – dłużej, zależnie od wymagań.</li>
-                <li><strong>Wsparcie:</strong> Po uruchomieniu oferujemy wsparcie, aktualizacje i możliwość rozwoju funkcji. Szybka reakcja na zgłoszenia (kilka godzin w dni robocze).</li>
-                <li><strong>Portal klienta:</strong> Dostęp do portalu z monitoringiem pracy chatbota, statystykami i kontrolą nad systemem.</li>
-              </ol>
-            </section>
-            <section class="about-section">
-              <h3>Koszty</h3>
-              <ul>
-                <li>Budowa chatbota od 1600 zł (w zależności od złożoności i integracji)</li>
-                <li>Utrzymanie od 800 zł miesięcznie (w zależności od ruchu na stronie)</li>
-                <li>Specjalna oferta: pierwszy miesiąc pracy chatbota za darmo dla pierwszego klienta (po opłaceniu budowy)</li>
-              </ul>
-              <p>Chcesz wycenę? Skontaktuj się z nami, a przygotujemy ofertę skrojoną pod Twój biznes.</p>
-            </section>
-            <section class="about-section">
-              <h3>Korzyści</h3>
-              <ul>
+        </section>
+
+        <!-- O FIRMIE I USŁUDZE (akordeon + nieskończoność) -->
+        <section class="about-service-section scroll-animate">
+          <div class="about-service-flex">
+            <div class="about-service-main">
+              <h2>Informacje o firmie</h2>
+              <div class="about-service-desc">
+                Stride-Services to młoda, dynamiczna firma specjalizująca się w tworzeniu spersonalizowanych chatbotów AI, które rewolucjonizują sposób, w jaki firmy komunikują się z klientami. Nasza misja to pełne zadowolenie klienta dzięki rozwiązaniom szytym na miarę, idealnie zintegrowanym z jego biznesem. Nie idziemy w masówkę – stawiamy na jakość, nie ilość. Nasze chatboty są ograniczone tylko przez kod, co daje niemal nieograniczone możliwości. Zespół tworzą Dominik Oczki, główny programista i specjalista AI, oraz Jakub Płaczek, ekspert od współpracy z klientami i współzałożyciel. Razem łączymy pasję do AI z wieloletnim doświadczeniem w tej szybko rozwijającej się dziedzinie, widząc w niej przyszłość biznesu.
+              </div>
+              <div class="about-service-accordion">
+                <button class="accordion-toggle" id="service-accordion-btn" aria-expanded="false" aria-controls="service-accordion-content">Nasza usługa <span class="accordion-arrow">▼</span></button>
+                <div class="accordion-content" id="service-accordion-content" hidden>
+                  <p>Oferujemy chatboty AI, które automatyzują obsługę klienta, ale nasze możliwości wykraczają daleko poza to. Możemy stworzyć rozwiązania zintegrowane z kalendarzami, Excelem, systemami rezerwacji czy innymi narzędziami, takimi jak umawianie spotkań czy zbieranie danych klientów. W przyszłości planujemy rozwijać bardziej zaawansowane funkcje, jak infolinie AI czy automatyczne rozmowy telefoniczne. Skupiamy się na firmach usługowych – od IT, przez edukację, zdrowie, po finanse i consulting. Niezależnie od branży, każdy chatbot jest projektowany tak, by idealnie pasował do Twoich potrzeb. Korzystamy z nowoczesnych technologii AI, by dostarczyć Ci produkt na najwyższym poziomie.</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-service-tech">
+              <h3>Nasze technologie & integracje</h3>
+              <div class="infinity-anim-wrap">
+                <svg class="infinity-anim" viewBox="0 0 120 60" width="120" height="60">
+                  <defs>
+                    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#1de982" stop-opacity="1"/>
+                      <stop offset="100%" stop-color="#0C5F33" stop-opacity="0.2"/>
+                    </radialGradient>
+                    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <path d="M20,30 Q20,10 40,10 Q60,10 60,30 Q60,50 80,50 Q100,50 100,30 Q100,10 80,10 Q60,10 60,30 Q60,50 40,50 Q20,50 20,30 Z" stroke="url(#glow)" stroke-width="6" fill="none" filter="url(#glowFilter)">
+                    <animate attributeName="stroke-dashoffset" values="0;120;0" dur="2.5s" repeatCount="indefinite"/>
+                  </path>
+                </svg>
+                <div class="infinity-desc">Ogranicza nas tylko kod</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROCES WSPÓŁPRACY (timeline) -->
+        <section class="timeline-section scroll-animate">
+          <h2>Proces współpracy</h2>
+          <div class="timeline-horizontal">
+            <div class="timeline-step" tabindex="0">
+              <div class="timeline-dot">1</div>
+              <div class="timeline-label">Analiza potrzeb</div>
+              <div class="timeline-detail">Tworzenie chatbota zaczynamy od dokładnej analizy Twoich potrzeb i struktury firmy – sprawdzamy, jak działa Twoja strona, system umawiania spotkań czy inne procesy, by zapewnić pełną integrację.</div>
+            </div>
+            <div class="timeline-step" tabindex="0">
+              <div class="timeline-dot">2</div>
+              <div class="timeline-label">Projektowanie</div>
+              <div class="timeline-detail">Następnie przechodzimy do projektowania, które trwa zwykle 2-3 tygodnie. W tym czasie jesteśmy w stałym kontakcie, by dopracować każdy szczegół i upewnić się, że wszystko Ci odpowiada.</div>
+            </div>
+            <div class="timeline-step" tabindex="0">
+              <div class="timeline-dot">3</div>
+              <div class="timeline-label">Realizacja</div>
+              <div class="timeline-detail">Proste projekty realizujemy w około 2 tygodnie, a bardziej złożone, z wieloma integracjami, mogą zająć więcej czasu – wszystko zależy od Twoich wymagań.</div>
+            </div>
+            <div class="timeline-step" tabindex="0">
+              <div class="timeline-dot">4</div>
+              <div class="timeline-label">Wsparcie</div>
+              <div class="timeline-detail">Po uruchomieniu chatbota oferujemy bieżące wsparcie wliczone w cene kosztów utrzymania, regularne aktualizacje i możliwość dodawania nowych funkcji, by Twoje rozwiązanie zawsze było na czasie. Odpowiadamy na zgłoszenia w ciągu kilku godzin w dni robocze, zapewniając szybką pomoc w razie potrzeby.</div>
+            </div>
+            <div class="timeline-step" tabindex="0">
+              <div class="timeline-dot">5</div>
+              <div class="timeline-label">Portal klienta</div>
+              <div class="timeline-detail">Dodatkowo, każdy klient otrzymuje dostęp do dedykowanego portalu, gdzie może monitorować pracę chatbota, sprawdzać statystyki, pytania od użytkowników i ich odpowiedzi, co daje pełną kontrolę nad działaniem systemu.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- KORZYŚCI I KOSZTY (tabela + oferta) -->
+        <section class="benefits-costs-section scroll-animate">
+          <div class="benefits-costs-flex">
+            <div class="benefits-block">
+              <h2>Korzyści</h2>
+              <ul class="benefits-list">
                 <li>Pełna personalizacja i bliski kontakt z klientem na każdym etapie współpracy</li>
                 <li>Dostosowanie do Twoich potrzeb</li>
                 <li>Szybsze poznanie oferty przez klientów</li>
@@ -94,66 +160,113 @@
                 <li>Szybkie odpowiedzi zwiększają sprzedaż i zaufanie</li>
                 <li>AI to przyszłość – zacznij ją wykorzystywać już teraz!</li>
               </ul>
-            </section>
-            <section class="about-section">
-              <h3>Przykłady i demo</h3>
-              <ul>
-                <li>Automatyzacja rutynowych zadań: odpowiadanie na pytania o ceny, godziny otwarcia, szczegóły usług</li>
-                <li>Obsługa klienta: reklamacje, zwroty, statusy zamówień, instrukcje</li>
-                <li>Rezerwacje i planowanie: szybkie umawianie spotkań, integracja z kalendarzami</li>
-                <li>Personalizacja: rekomendacje, promocje, usługi dodatkowe</li>
-                <li>Wsparcie 24/7</li>
-                <li>Generowanie leadów: zbieranie danych i kwalifikacja klientów</li>
-                <li>Zbieranie opinii: automatyczne prośby o feedback</li>
+            </div>
+            <div class="costs-block">
+              <h2>Koszty</h2>
+              <ul class="costs-list">
+                <li>Budowa chatbota zaczyna się od 1600 zł, w zależności od jego złożoności i potrzebnych integracji.</li>
+                <li>Utrzymanie to minimum 800 zł miesięcznie, w zależności od ruchu na stronie.</li>
               </ul>
-              <p>Wszystko to działa płynnie w języku polskim lub innym, z integracją z Twoimi systemami (CRM, kalendarz, e-commerce).</p>
-              <p>Chcesz zobaczyć, jak to działa? Umów się na rozmowę przez Zoom, Teams lub inną platformę, a w 2-3 tygodnie przygotujemy dla Ciebie prototyp chatbota dopasowany do Twoich potrzeb.</p>
-            </section>
+              <div class="faq-hint">Szukasz FAQ? <span class="faq-chatbot">Zapytaj chatbota!</span></div>
+              <div class="special-offer-box">Specjalna oferta: pierwszy miesiąc pracy chatbota na Twojej stronie za darmo (po opłaceniu budowy).</div>
+            </div>
+          </div>
+          <div class="comparison-table-wrap">
+            <h3>Chatbot AI vs. Chatbot zwykły</h3>
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Chatbot AI</th>
+                  <th>Chatbot zwykły</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Naturalność rozmowy</td>
+                  <td>Płynna, zbliżona do ludzkiej</td>
+                  <td>Sztywna, schematyczna</td>
+                </tr>
+                <tr>
+                  <td>Elastyczność</td>
+                  <td>Odpowiada na nietypowe pytania, rozumie kontekst</td>
+                  <td>Ograniczony do zaprogramowanych ścieżek</td>
+                </tr>
+                <tr>
+                  <td>Uczenie się</td>
+                  <td>Samodoskonalenie na podstawie interakcji</td>
+                  <td>Wymaga ręcznego aktualizowania skryptów</td>
+                </tr>
+                <tr>
+                  <td>Integracje</td>
+                  <td>Łatwa integracja z CRM, kalendarzami, rezerwacjami</td>
+                  <td>Często działa w izolacji</td>
+                </tr>
+                <tr>
+                  <td>Personalizacja</td>
+                  <td>Rekomendacje, promocje, indywidualne podejście</td>
+                  <td>Bardzo ograniczona</td>
+                </tr>
+                <tr>
+                  <td>Dostępność</td>
+                  <td>24/7</td>
+                  <td>Zwykle tylko w godzinach pracy</td>
+                </tr>
+                <tr>
+                  <td>Koszt wdrożenia</td>
+                  <td>Od 1600 zł</td>
+                  <td>Od 1000 zł</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
-        <!-- Kontakt -->
-        <section id="contact" class="tab-content">
-          <h2>Kontakt</h2>
-          <p>Skontaktuj się z nami przez e-mail: <a href="mailto:jakub@stride-services.com">jakub@stride-services.com</a>, zadzwoń do Dominika (<a href="tel:+48728381170">+48 728 381 170</a>) lub Jakuba (<a href="tel:+48785226886">+48 785 226 886</a>), albo zostaw swój numer lub e-mail w naszym czacie – odezwiemy się ASAP!</p>
-          <div class="contact-grid">
-            <div class="contact-info">
-              <h3>Dane kontaktowe</h3>
-              <div class="contact-item">
-                <strong>📧 Email:</strong>
-                <a href="mailto:jakub@stride-services.com">jakub@stride-services.com</a>
-              </div>
-              <div class="contact-item">
-                <strong>📞 Dominik:</strong>
-                <a href="tel:+48728381170">+48 728 381 170</a>
-              </div>
-              <div class="contact-item">
-                <strong>📞 Jakub:</strong>
-                <a href="tel:+48785226886">+48 785 226 886</a>
-              </div>
-              <div class="contact-item">
-                <strong>💬 Chatbot:</strong>
-                <span>Zostaw swój numer lub e-mail w czacie – odezwiemy się ASAP!</span>
-              </div>
+        <!-- PRZYKŁADY I DEMO -->
+        <section class="examples-section scroll-animate">
+          <h2>Przykłady i demo</h2>
+          <div class="examples-block">
+            <p>Choć jesteśmy nową firmą, nasze doświadczenie w tworzeniu nowoczesnych chatbotów AI pozwala nam oferować rozwiązania, które zmieniają sposób prowadzenia biznesu. Nasz chatbot to wszechstronny asystent – niezależnie od tego, czy oferujesz usługi konsultingowe, zarządzasz rezerwacjami, sprzedajesz produkty czy świadczysz wsparcie techniczne. Oto, co może dla Ciebie zrobić:</p>
+            <ul class="examples-list">
+              <li>Automatyzacja rutynowych zadań: Odpowiada na pytania o ceny, godziny otwarcia czy szczegóły usług w sposób naturalny i precyzyjny.</li>
+              <li>Obsługa klienta: Zarządza reklamacjami, zwrotami, statusami zamówień czy instrukcjami, odciążając Twój zespół.</li>
+              <li>Rezerwacje i planowanie: Umożliwia szybkie umawianie spotkań i rezerwacje usług z integracją z kalendarzami lub systemami rezerwacyjnymi.</li>
+              <li>Personalizacja: Analizuje preferencje klientów i oferuje spersonalizowane rekomendacje, np. promocje czy usługi dodatkowe.</li>
+              <li>Wsparcie 24/7: Odpowiada na zapytania o każdej porze, zwiększając satysfakcję i lojalność klientów.</li>
+              <li>Generowanie leadów: Zbiera dane kontaktowe i kwalifikuje potencjalnych klientów, przekazując gotowe leady Twojemu zespołowi.</li>
+              <li>Zbieranie opinii: Automatycznie prosi o feedback po usłudze, pomagając poprawić ofertę.</li>
+            </ul>
+            <p>Wszystko to działa płynnie w języku polskim lub dowolnym innym, z integracją z Twoimi systemami, takimi jak CRM, kalendarz czy platformy e-commerce.<br>
+            Chcesz zobaczyć, jak to działa? Umów się na niezobowiązującą rozmowę przez Zoom, Teams lub inną platformę, a w 2-3 tygodnie przygotujemy dla Ciebie w pełni funkcjonalny prototyp chatbota, dopasowany do Twoich potrzeb. Pokażemy Ci, jak zautomatyzować procesy, zwiększyć satysfakcję klientów i wygenerować więcej przychodów – niezależnie od wielkości Twojej firmy.</p>
+            <div class="examples-contact">
+              <b>Kontakt:</b> jakub@stride-services.com, Dominik (728381170), Jakub (785226886) lub zostaw swój numer/e-mail w czacie – odezwiemy się ASAP!
             </div>
-            <div class="contact-form">
-              <h3>Wyślij wiadomość</h3>
-              <form class="contact-form-element">
-                <div class="form-group">
-                  <label for="name">Imię i nazwisko</label>
-                  <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                  <label for="message">Wiadomość</label>
-                  <textarea id="message" name="message" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Wyślij wiadomość</button>
-              </form>
-            </div>
+          </div>
+        </section>
+
+        <!-- SEKCKJA KONTAKT -->
+        <section class="contact-section scroll-animate" id="contact-section">
+          <div class="contact-block">
+            <h2>Kontakt</h2>
+            <table class="contact-table contact-table-wide">
+              <tbody>
+                <tr>
+                  <th>E-mail</th>
+                  <td><a href="mailto:jakub@stride-services.com">jakub@stride-services.com</a></td>
+                </tr>
+                <tr>
+                  <th>Telefon</th>
+                  <td>
+                    <div class="contact-tel"><span>Dominik:</span> <a href="tel:728381170">728 381 170</a></div>
+                    <div class="contact-tel"><span>Jakub:</span> <a href="tel:785226886">785 226 886</a></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Chatbot</th>
+                  <td>Zostaw swój numer lub e-mail w czacie – odezwiemy się ASAP!</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
       </div>
@@ -161,17 +274,6 @@
   </div>
 
   <!-- Widget czatu -->
-  <div id="ask-ai-arrow" class="ask-ai-arrow">
-    <span class="ask-ai-text">ZAPYTAJ AI</span>
-    <svg class="ask-ai-svg" width="320" height="60" viewBox="0 0 320 60">
-      <defs>
-        <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
-          <polygon points="0 0, 12 4, 0 8" fill="#0C5F33"/>
-        </marker>
-      </defs>
-      <path d="M10,10 Q160,0 310,40" stroke="#0C5F33" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-    </svg>
-  </div>
   <button id="open-btn" aria-label="Otwórz czat">
     <span class="dots" aria-hidden="true">
       <span></span><span></span><span></span>
@@ -184,7 +286,23 @@
       <div id="messages" class="messages"></div>
     </div>
     <div class="widget-footer">
-      <form id="message-form">
+      <!-- Sekcja polityki RODO -->
+      <div id="privacy-section" class="privacy-section">
+        <div class="privacy-text">
+          Aby rozpocząć czat, musisz zaakceptować naszą <a href="https://stride-services.pl/polityka-prywatnosci" target="_blank" class="privacy-link">Politykę Prywatności</a>.
+        </div>
+        <div class="privacy-checkbox-container">
+          <label class="privacy-checkbox-label">
+            <input type="checkbox" id="privacy-checkbox" class="privacy-checkbox">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Akceptuję Politykę Prywatności</span>
+          </label>
+        </div>
+        <button id="start-chat-btn" class="start-chat-btn" disabled>Rozpocznij czat</button>
+      </div>
+      
+      <!-- Formularz wiadomości (początkowo ukryty) -->
+      <form id="message-form" class="message-form hidden">
         <input type="text" id="user-input" placeholder="Napisz wiadomość..." autocomplete="off" />
         <button type="submit" class="send-btn" aria-label="Wyślij wiadomość">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
