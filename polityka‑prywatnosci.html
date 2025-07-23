@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polityka Prywatności | Stride-Services</title>
+  <link rel="icon" type="image/png" href="ikonkastride.png" />
+  <style>
+    /* --- Reset & base --- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #161a18 0%, #232625 60%, #181b19 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 16px 64px 16px;
+    }
+    .policy-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .policy-logo {
+      width: 220px;
+      margin: 0 auto 18px auto;
+      display: block;
+      filter: drop-shadow(0 2px 8px #0C5F3340);
+    }
+    .policy-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #0C5F33;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px #0C5F3340;
+    }
+    .policy-date {
+      color: #1de982;
+      font-size: 1.1rem;
+      margin-bottom: 0;
+      font-weight: 600;
+    }
+    .policy-section {
+      background: rgba(40, 40, 40, 0.96);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(12, 95, 51, 0.13), 0 0 20px rgba(12, 95, 51, 0.09);
+      padding: 32px 24px;
+      margin-bottom: 32px;
+      border: 1.5px solid rgba(12, 95, 51, 0.22);
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.3s, border 0.3s, transform 0.3s;
+    }
+    .policy-section h2 {
+      color: #0C5F33;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      margin-top: 0;
+    }
+    .policy-section ul, .policy-section ol {
+      margin: 12px 0 18px 24px;
+      padding-left: 18px;
+      color: #fff;
+      font-size: 1.08rem;
+    }
+    .policy-section li {
+      margin-bottom: 8px;
+      line-height: 1.7;
+    }
+    .policy-section p, .policy-section li {
+      color: rgba(255,255,255,0.93);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+    .policy-section strong, .policy-section b {
+      color: #1de982;
+      font-weight: 600;
+    }
+    .policy-section .admin-contact {
+      margin: 10px 0 0 0;
+      font-size: 1.08rem;
+      color: #1de982;
+    }
+    .policy-section code {
+      background: #232625;
+      color: #1de982;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.98em;
+    }
+    .policy-section table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 1.05rem;
+    }
+    .policy-section th, .policy-section td {
+      border: 1px solid #1de982;
+      padding: 10px 8px;
+      text-align: left;
+    }
+    .policy-section th {
+      background: #0C5F33;
+      color: #fff;
+      font-weight: 700;
+    }
+    .policy-section td {
+      background: rgba(30,30,30,0.92);
+    }
+    .policy-section .highlight {
+      background: linear-gradient(135deg, #1de982 0%, #0C5F33 100%);
+      color: #232625;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin: 12px 0;
+      display: inline-block;
+      box-shadow: 0 0 20px #0C5F3340;
+    }
+    .policy-footer {
+      text-align: center;
+      color: #888;
+      font-size: 1rem;
+      margin-top: 32px;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 10px 2vw 30vw 2vw; }
+      .policy-header { margin-bottom: 18px; }
+      .policy-logo { width: 120px; }
+      .policy-title { font-size: 1.3rem; }
+      .policy-section { padding: 12px 4px; border-radius: 10px; }
+      .policy-section h2 { font-size: 1.05rem; }
+      .policy-section p, .policy-section li { font-size: 0.98rem; }
+    }
+    /* Subtle background deco */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(12, 95, 51, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(10, 74, 42, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(12, 95, 51, 0.04) 0%, transparent 50%);
+      z-index: -1;
+      pointer-events: none;
+      animation: backgroundFloat 20s ease-in-out infinite;
+    }
+    @keyframes backgroundFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-10px, -10px) scale(1.1); }
+    }
+    /* Simple fade-in */
+    .fade-in { opacity: 0; animation: fadeInUp 1.2s ease forwards; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container fade-in">
+    <header class="policy-header">
+      <img src="FO51AA85ACF83a1-01.png" alt="Stride Services logo" class="policy-logo" />
+      <h1 class="policy-title">Polityka Prywatności i Ochrony Danych Osobowych (RODO)</h1>
+      <div class="policy-date">Data ostatniej aktualizacji: 23.07.2025</div>
+    </header>
+
+    <section class="policy-section">
+      <h2>1. Administrator Danych</h2>
+      <p><b>Administratorem Danych Osobowych</b> jest:</p>
+      <ul>
+        <li><b>Dominik Oczki</b></li>
+        <li>ul. Leszczynowa 14, 89-203 Rynarzewo</li>
+        <li>Telefon: <a href="tel:+48728381170" style="color:#1de982;">+48 728 381 170</a></li>
+        <li>E-mail: <a href="mailto:dominikoczki@gmail.com" style="color:#1de982;">dominikoczki@gmail.com</a></li>
+      </ul>
+      <p>Administrator jest osobą fizyczną przetwarzającą dane wyłącznie w celu kontaktu w sprawie umówienia spotkania biznesowego.</p>
+    </section>
+
+    <section class="policy-section">
+      <h2>2. Cele i podstawy prawne przetwarzania</h2>
+      <b>Cele przetwarzania</b>
+      <ul>
+        <li>Umożliwienie kontaktu z użytkownikiem w celu umówienia spotkania biznesowego (np. prezentacja oferty, omówienie współpracy).</li>
+        <li>Zbieranie adresu e-mail oraz numeru telefonu wyłącznie na potrzeby ustalenia terminu i miejsca spotkania.</li>
+        <li>Gromadzenie historii rozmów z chatbota AI w celu poprawy jakości usługi, jednak nigdy w celach marketingowych.</li>
+        <li>Zbieranie adresu IP w celu potwierdzenia zgody na politykę prywatności.</li>
+      </ul>
+      <b>Podstawa prawna</b>
+      <ul>
+        <li>art. 6 ust. 1 lit. a RODO – zgoda użytkownika na przetwarzanie danych niezbędnych do kontaktu w sprawie spotkania biznesowego.</li>
+      </ul>
+    </section>
+
+    <section class="policy-section">
+      <h2>3. Zakres przetwarzanych danych</h2>
+      <b>Dane ujawnione dobrowolnie przez użytkownika</b>
+      <ul>
+        <li>adres e-mail,</li>
+        <li>numer telefonu,</li>
+        <li>treść konwersacji (historia rozmów) – wyłącznie w celu usprawnienia obsługi i analizy działania chatbota.</li>
+      </ul>
+      <b>Dane techniczne (zbierane automatycznie)</b>
+      <ul>
+        <li>adres IP – przechowywany przez okres 2 lat w celu potwierdzenia zgody na politykę prywatności,</li>
+        <li>rodzaj i wersja przeglądarki,</li>
+        <li>czas trwania sesji,</li>
+        <li>pliki cookies niezbędne do funkcjonowania usługi.</li>
+      </ul>
+    </section>
+
+    <section class="policy-section">
+      <h2>4. Przechowywanie i TTL</h2>
+      <p>Wszystkie dane osobowe oraz techniczne są przechowywane w usłudze Amazon Web Services (AWS) – baza danych DynamoDB. Każdy rekord w bazie posiada atrybut TTL (Time To Live), który automatycznie usuwa wpisy po upływie określonego okresu retencji:</p>
+      <ul>
+        <li><b>Dane kontaktowe</b> (e-mail, numer telefonu) oraz <b>historia rozmów</b> – TTL ustawione na 7 dni od daty ostatniej interakcji.</li>
+        <li><b>Dane techniczne</b> (logi) – TTL ustawione na 7 dni od daty rejestracji.</li>
+        <li><b>Adres IP</b> – przechowywany przez okres 2 lat w celu potwierdzenia zgody na politykę prywatności.</li>
+      </ul>
+    </section>
+
+    <section class="policy-section">
+      <h2>5. Udostępnianie danych</h2>
+      <p>Administratorem przetwarzania danych jest Dominik Oczki, który korzysta z usług zewnętrznych dostawców w następujący sposób:</p>
+      <ul>
+        <li><b>Amazon Web Services, Inc. (AWS)</b> – dane przechowywane są w usłudze DynamoDB na warunkach Ogólnych Warunków Świadczenia Usług AWS (AWS Customer Agreement). Regulaminy AWS zawierają standardowy dodatek dotyczący przetwarzania danych osobowych (Data Processing Addendum), który Administrator akceptuje podczas korzystania z usług.</li>
+        <li>Dane osobowe nie są przekazywane do państw trzecich poza obszar EOG, z wyjątkiem poddostawców ww. usług, zabezpieczonych wspomnianymi umownymi mechanizmami ochronnymi.</li>
+      </ul>
+    </section>
+
+    <section class="policy-section">
+      <h2>6. Okres przechowywania danych</h2>
+      <p>Dane przechowywane są do momentu wygaśnięcia ich TTL lub wycofania zgody przez użytkownika. Po upływie okresu TTL dane są automatycznie usuwane z bazy danych.</p>
+    </section>
+
+    <section class="policy-section">
+      <h2>7. Prawa osób, których dane dotyczą</h2>
+      <p>Użytkownik ma prawo do:</p>
+      <ul>
+        <li>dostępu do treści swoich danych,</li>
+        <li>sprostowania (poprawienia) danych,</li>
+        <li>usunięcia danych („prawo do bycia zapomnianym”),</li>
+        <li>ograniczenia przetwarzania,</li>
+        <li>przenoszenia danych,</li>
+        <li>wniesienia sprzeciwu wobec przetwarzania,</li>
+        <li>wycofania zgody w dowolnym momencie (bez wpływu na zgodność z prawem wcześniejszego przetwarzania),</li>
+        <li>wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</li>
+      </ul>
+      <div class="admin-contact">Wnioski należy kierować na adres: <a href="mailto:dominikoczki@gmail.com" style="color:#1de982;">dominikoczki@gmail.com</a>.</div>
+    </section>
+
+    <section class="policy-section">
+      <h2>8. Zabezpieczenia</h2>
+      <p>Administrator zapewnia odpowiednie środki techniczne i organizacyjne, w tym:</p>
+      <ul>
+        <li>szyfrowanie transmisji danych (SSL/TLS),</li>
+        <li>kontrolę dostępu do zasobów AWS,</li>
+        <li>regularne kopie zapasowe i procedury odtwarzania danych.</li>
+      </ul>
+      <p>Administrator korzysta z usług AWS, które zapewniają wysoki poziom bezpieczeństwa i ochrony danych.</p>
+    </section>
+
+    <section class="policy-section">
+      <h2>9. Pliki cookies</h2>
+      <p>Serwis wykorzystuje pliki cookies do:</p>
+      <ul>
+        <li>zapewnienia funkcjonowania chatbota (cookies sesyjne),</li>
+        <li>analizy ruchu w Serwisie (Google Analytics),</li>
+        <li>działań marketingowych.</li>
+      </ul>
+      <p>Użytkownik może zarządzać ciasteczkami poprzez ustawienia przeglądarki.</p>
+    </section>
+
+    <section class="policy-section">
+      <h2>10. Marketing bezpośredni i telemarketing</h2>
+      <p>Administrator przeprowadza kontakt telefoniczny wyłącznie na podstawie wyraźnej zgody użytkownika wyrażonej w trakcie rozmowy. Przed wykonaniem połączenia Administrator weryfikuje rejestry sprzeciwów (np. krajowy rejestr "Nie Dzwoń"). Każde połączenie telefoniczne oznaczone jest identyfikatorem dzwoniącego. Użytkownik ma prawo w każdej chwili wycofać zgodę na kontakt marketingowy, wysyłając stosowną wiadomość na adres <a href="mailto:dominikoczki@gmail.com" style="color:#1de982;">dominikoczki@gmail.com</a>.</p>
+    </section>
+
+    <footer class="policy-footer">
+      &copy; 2025 Stride-Services. Wszelkie prawa zastrzeżone.
+    </footer>
+  </div>
+  <script>
+    // Fade-in effect on load
+    window.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.fade-in').style.opacity = 1;
+    });
+  </script>
+</body>
+</html> 
