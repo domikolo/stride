@@ -257,6 +257,7 @@ body {
   flex-direction: column;
   gap: 16px;
   transition: opacity 0.3s ease;
+  margin-bottom: 30px;
 }
 
 .privacy-text {
