@@ -36,22 +36,7 @@ if (privacyCheckbox && startChatBtn) {
 
 // Stare funkcje callout, TADA effect usunięte - nie są potrzebne
 
-// Funkcja do dodawania wiadomości
-function addMessage(text, type) {
-  const div = document.createElement('div');
-  div.className = `message ${type}-message`;
-  
-  // Formatowanie tekstu - zamiana podwójnych enterów na akapity
-  const formattedText = text
-    .replace(/\n\n/g, '</p><p>')  // Podwójne enter na nowy akapit
-    .replace(/\n/g, '<br>');       // Pojedyncze enter na nową linię
-  
-  div.innerHTML = `<p>${formattedText}</p>`;
-  messages.appendChild(div);
-  
-  // Auto-scroll do najnowszej wiadomości
-  messages.scrollTop = messages.scrollHeight;
-}
+// Pierwsza funkcja addMessage usunięta - używamy lepszej wersji poniżej
 // Stare funkcje showCallout i TADA effect usunięte
 
 const sessionKey = 'sessionId';
@@ -67,10 +52,26 @@ function addMessage(text, type) {
   const div = document.createElement('div');
   div.className = `message ${type}-message`;
   
-  // Formatowanie tekstu - zamiana podwójnych enterów na akapity
-  const formattedText = text
-    .replace(/\n\n/g, '</p><p>')  // Podwójne enter na nowy akapit
-    .replace(/\n/g, '<br>');       // Pojedyncze enter na nową linię
+  // Ulepszone formatowanie tekstu
+  let formattedText = text;
+  
+  // Obsługa list numerowanych (1. 2. 3.)
+  formattedText = formattedText.replace(/^(\d+\.\s+)(.+)$/gm, '<div class="list-item"><span class="list-number">$1</span>$2</div>');
+  
+  // Obsługa list z kropkami (• lub -)
+  formattedText = formattedText.replace(/^[•\-]\s+(.+)$/gm, '<div class="list-item"><span class="list-bullet">•</span>$1</div>');
+  
+  // Obsługa pogrubienia (**tekst**)
+  formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // Obsługa kursywy (*tekst*)
+  formattedText = formattedText.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  
+  // Podwójne enter na nowy akapit z większym odstępem
+  formattedText = formattedText.replace(/\n\n+/g, '</p><p class="paragraph-break">');
+  
+  // Pojedyncze enter na nową linię
+  formattedText = formattedText.replace(/\n/g, '<br>');
   
   div.innerHTML = `<p>${formattedText}</p>`;
   messages.appendChild(div);
