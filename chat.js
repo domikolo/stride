@@ -36,15 +36,26 @@ if (privacyCheckbox && startChatBtn) {
 }
 
 // CALL-OUT logic
-const callout = document.createElement('div');
-callout.className = 'callout';
-const calloutText = document.createElement('span');
-calloutText.className = 'callout-text';
-calloutText.textContent = 'Potrzebujesz pomocy?';
-callout.appendChild(calloutText);
-document.body.appendChild(callout);
+// Usunięto logikę callout z napisem 'Potrzebujesz pomocy?'
 
 let callCount = 0;
+
+// Funkcja do dodawania wiadomości
+function addMessage(text, type) {
+  const div = document.createElement('div');
+  div.className = `message ${type}-message`;
+  
+  // Formatowanie tekstu - zamiana podwójnych enterów na akapity
+  const formattedText = text
+    .replace(/\n\n/g, '</p><p>')  // Podwójne enter na nowy akapit
+    .replace(/\n/g, '<br>');       // Pojedyncze enter na nową linię
+  
+  div.innerHTML = `<p>${formattedText}</p>`;
+  messages.appendChild(div);
+  
+  // Auto-scroll do najnowszej wiadomości
+  messages.scrollTop = messages.scrollHeight;
+}
 function showCallout() {
   if (widget && !widget.classList.contains('hidden')) return;
   if (callCount++ >= 3) return;
@@ -77,150 +88,17 @@ if (aboutArrow) {
   });
 }
 
-// Ukrywanie strzałki "ZAPYTAJ AI" po kliknięciu przycisku czatu
-const askAiArrow = document.getElementById('ask-ai-arrow');
-
-const CHAT_ANIMATION_DURATION = 2000; // ms
-const CHAT_HEIGHT_SHRINK = 1000; // ms
-const CHAT_SLIDE = 1000; // ms
-const CHAT_WIDTH = 450; // px, szerokość wrappera
-const BTN_WIDTH = 35; // px, szerokość przycisku
-
-function isMobile() {
-  return window.matchMedia('(max-width: 600px)').matches;
-}
-
-function animateCloseChat() {
-  if (widget.classList.contains('hidden') || widget.classList.contains('animating')) return;
-  if (isMobile()) {
-    widget.classList.add('hidden');
-    widget.classList.remove('shrink-height', 'animating');
-    widget.style.removeProperty('height');
-    widget.style.removeProperty('transform');
-    widget.style.removeProperty('transition');
-    widget.style.removeProperty('z-index');
-    widget.style.removeProperty('width');
-    return;
-  }
-  console.log('Zamykanie czatu - animacja start');
-  widget.classList.add('animating');
-  
-  // Ukryj nagłówek i treść na początku animacji
-  const header = widget.querySelector('.widget-header');
-  const body = widget.querySelector('.widget-body');
-  const footer = widget.querySelector('.widget-footer');
-  
-  if (header) header.style.opacity = '0';
-  if (body) body.style.opacity = '0';
-  if (footer) footer.style.opacity = '0';
-  
-  // 1. Shrink height
-  widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
-  widget.style.setProperty('height', '120px', 'important');
-  console.log('Wysokość zmniejszona do 120px');
-  setTimeout(() => {
-    // 2. Slide right (tunel)
-    console.log('Rozpoczynam animację tunelu - przesuwam w prawo');
-    widget.style.setProperty('transition', 'transform 0.6s cubic-bezier(0.77,0,0.18,1)', 'important');
-    widget.style.setProperty('transform', 'translateY(-50%) translateX(40px)', 'important');
-    console.log('Transform ustawiony na translateX(40px)');
-    setTimeout(() => {
-      // 3. Shrink width to button width
-      console.log('Zwężam szerokość do szerokości przycisku');
-      widget.style.setProperty('transition', 'width 0.4s cubic-bezier(0.77,0,0.18,1)', 'important');
-      widget.style.setProperty('width', '35px', 'important');
-      setTimeout(() => {
-        console.log('Animacja tunelu zakończona - ukrywam okno');
-        widget.classList.remove('animating');
-        widget.classList.add('hidden');
-        widget.style.removeProperty('height');
-        widget.style.removeProperty('transform');
-        widget.style.removeProperty('transition');
-        widget.style.removeProperty('width');
-        // Przywróć widoczność wszystkich elementów
-        if (header) header.style.removeProperty('opacity');
-        if (body) body.style.removeProperty('opacity');
-        if (footer) footer.style.removeProperty('opacity');
-      }, 400);
-    }, 600);
-  }, 500);
-}
-
-function animateOpenChat() {
-  if (!widget.classList.contains('hidden') || widget.classList.contains('animating')) return;
-  if (isMobile()) {
-    widget.classList.remove('hidden');
-    widget.classList.remove('shrink-height', 'animating');
-    widget.style.removeProperty('height');
-    widget.style.removeProperty('transform');
-    widget.style.removeProperty('transition');
-    widget.style.removeProperty('z-index');
-    widget.style.removeProperty('width');
-    return;
-  }
-  console.log('Otwieranie czatu - animacja start');
-  widget.classList.add('animating');
-  widget.style.setProperty('height', '120px', 'important');
-  widget.style.setProperty('width', '35px', 'important');
-  widget.style.setProperty('transform', 'translateY(-50%) translateX(40px)', 'important');
-  widget.style.setProperty('transition', 'none', 'important');
-  widget.style.setProperty('z-index', '2002', 'important');
-  widget.classList.remove('hidden');
-  
-  // Ukryj wszystkie elementy na początku animacji
-  const header = widget.querySelector('.widget-header');
-  const body = widget.querySelector('.widget-body');
-  const footer = widget.querySelector('.widget-footer');
-  
-  if (header) header.style.opacity = '0';
-  if (body) body.style.opacity = '0';
-  if (footer) footer.style.opacity = '0';
-  
-  console.log('Okno ustawione na pozycję startową (niskie, wąskie, przesunięte)');
-  void widget.offsetWidth;
-  // 1. Slide left (tunel)
-  console.log('Rozpoczynam animację tunelu - przesuwam w lewo');
-  widget.style.setProperty('transition', 'transform 0.6s cubic-bezier(0.77,0,0.18,1)', 'important');
-  widget.style.setProperty('transform', 'translateY(-50%) translateX(0)', 'important');
-  console.log('Transform ustawiony na translateX(0)');
-  setTimeout(() => {
-    // 2. Expand width
-    console.log('Rozszerzam szerokość');
-    widget.style.setProperty('transition', 'width 0.4s cubic-bezier(0.77,0,0.18,1)', 'important');
-    widget.style.setProperty('width', '450px', 'important');
-    setTimeout(() => {
-      // 3. Expand height
-      console.log('Rozpoczynam animację wysokości - rozciągam');
-      widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
-      widget.style.setProperty('height', '600px', 'important');
-      setTimeout(() => {
-        console.log('Animacja zakończona');
-        widget.classList.remove('animating');
-        widget.style.removeProperty('height');
-        widget.style.removeProperty('transform');
-        widget.style.removeProperty('transition');
-        widget.style.removeProperty('width');
-        // Pokaż wszystkie elementy na końcu animacji
-        if (header) header.style.opacity = '1';
-        if (body) body.style.opacity = '1';
-        if (footer) footer.style.opacity = '1';
-      }, 500);
-    }, 400);
-  }, 600);
-}
-
 openBtn.addEventListener('click', () => {
-  if (widget.classList.contains('hidden')) {
-    animateOpenChat();
+  widget.classList.toggle('hidden');
+  if (!widget.classList.contains('hidden')) {
     callout.classList.remove('callout--visible');
-  } else {
-    animateCloseChat();
+    if (aboutArrow) aboutArrow.style.display = 'none';
   }
 });
 
 function addMessage(text, type) {
   const div = document.createElement('div');
-  div.className = `message ${type}`;
+  div.className = `message ${type}-message`;
   
   // Formatowanie tekstu - zamiana podwójnych enterów na akapity
   const formattedText = text
@@ -262,11 +140,6 @@ function hideTypingIndicator(typingDiv) {
 }
 
 async function sendMessage(query) {
-  // Sprawdź czy użytkownik zaakceptował politykę RODO
-  if (!privacyCheckbox || !privacyCheckbox.checked) {
-    return;
-  }
-  
   // Sprawdź czy już czekamy na odpowiedź
   if (isWaitingForResponse) {
     return;
@@ -350,142 +223,21 @@ navLinks.forEach(link => {
   });
 });
 
-// --- Obsługa kart flip ---
-const flipCards = document.querySelectorAll('.flip-card');
-
-console.log('Znalezione karty flip:', flipCards.length);
-
-flipCards.forEach((card, index) => {
-  console.log(`Karta ${index + 1}:`, card);
-  card.addEventListener('click', () => {
-    console.log(`Kliknięto kartę ${index + 1}`);
-    card.classList.toggle('flipped');
-  });
-});
-
-// --- Scroll animations ---
-const scrollAnimations = () => {
-  const elements = document.querySelectorAll('.scroll-animate');
-  
-  elements.forEach(element => {
-    const elementTop = element.getBoundingClientRect().top;
-    const elementVisible = 150;
+// --- Obsługa formularza kontaktowego ---
+const contactForm = document.querySelector('.contact-form-element');
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
     
-    if (elementTop < window.innerHeight - elementVisible) {
-      element.classList.add('visible');
-    }
+    const formData = new FormData(contactForm);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const message = formData.get('message');
+    
+    // Tutaj możesz dodać logikę wysyłania formularza
+    alert(`Dziękujemy za wiadomość, ${name}! Skontaktujemy się z Tobą wkrótce.`);
+    
+    // Wyczyść formularz
+    contactForm.reset();
   });
-};
-
-// Initial check
-scrollAnimations();
-
-// Add scroll listener
-window.addEventListener('scroll', scrollAnimations);
-
-// Add floating animation to some elements
-document.addEventListener('DOMContentLoaded', () => {
-  const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle) {
-    heroTitle.classList.add('floating');
-  }
-});
-
-// --- Akordeon w sekcji o usłudze ---
-document.addEventListener('DOMContentLoaded', () => {
-  // Akordeon 'Nasza usługa' (unikalny selektor)
-  const serviceAccordionBtn = document.getElementById('service-accordion-btn');
-  const serviceAccordionContent = document.getElementById('service-accordion-content');
-  if (serviceAccordionBtn && serviceAccordionContent) {
-    serviceAccordionBtn.addEventListener('click', () => {
-      const expanded = serviceAccordionBtn.getAttribute('aria-expanded') === 'true';
-      serviceAccordionBtn.setAttribute('aria-expanded', String(!expanded));
-      serviceAccordionContent.hidden = expanded;
-      serviceAccordionBtn.querySelector('.accordion-arrow').textContent = expanded ? '▼' : '▲';
-      serviceAccordionBtn.classList.toggle('active', !expanded);
-      serviceAccordionContent.classList.toggle('open', !expanded);
-    });
-  }
-
-  // Timeline: otwieranie wszystkich kroków przy scrollu
-  const timelineSection = document.querySelector('.timeline-section');
-  const timelineSteps = document.querySelectorAll('.timeline-horizontal .timeline-step');
-  let timelineActivated = false;
-  function openAllTimelineSteps() {
-    timelineSteps.forEach(s => s.classList.add('active'));
-    timelineActivated = true;
-  }
-  function onScrollTimeline() {
-    if (timelineActivated) return;
-    const rect = timelineSection.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 100) {
-      openAllTimelineSteps();
-      window.removeEventListener('scroll', onScrollTimeline);
-    }
-  }
-  if (timelineSection && timelineSteps.length > 0) {
-    window.addEventListener('scroll', onScrollTimeline);
-    // Jeśli sekcja już widoczna na starcie
-    onScrollTimeline();
-  }
-});
-
-// --- Nawigacja: O nas / Kontakt ---
-document.addEventListener('DOMContentLoaded', () => {
-  // Timeline: otwieranie wszystkich kroków przy scrollu
-  const timelineSection = document.querySelector('.timeline-section');
-  const timelineSteps = document.querySelectorAll('.timeline-horizontal .timeline-step');
-  let timelineActivated = false;
-  function openAllTimelineSteps() {
-    timelineSteps.forEach(s => s.classList.add('active'));
-    timelineActivated = true;
-  }
-  function onScrollTimeline() {
-    if (timelineActivated) return;
-    const rect = timelineSection.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 100) {
-      openAllTimelineSteps();
-      window.removeEventListener('scroll', onScrollTimeline);
-    }
-  }
-  if (timelineSection && timelineSteps.length > 0) {
-    window.addEventListener('scroll', onScrollTimeline);
-    // Jeśli sekcja już widoczna na starcie
-    onScrollTimeline();
-  }
-
-  const aboutLink = document.querySelector('.nav-link[data-tab="about"]');
-  const contactLink = document.querySelector('.nav-link[data-tab="contact"]');
-  const heroSection = document.querySelector('.hero-scene');
-  const aboutSections = [
-    document.querySelector('.about-ai-section'),
-    document.querySelector('.about-service-section'),
-    document.querySelector('.timeline-section'),
-    document.querySelector('.benefits-costs-section'),
-    document.querySelector('.examples-section')
-  ];
-  const contactSection = document.getElementById('contact-section');
-
-  function showAbout() {
-    if (heroSection) heroSection.style.display = '';
-    aboutSections.forEach(s => s && (s.style.display = ''));
-    if (contactSection) contactSection.style.display = 'none';
-    aboutLink.classList.add('active');
-    contactLink.classList.remove('active');
-    window.scrollTo({ top: heroSection?.offsetTop || 0, behavior: 'smooth' });
-  }
-  function showContact() {
-    if (heroSection) heroSection.style.display = 'none';
-    aboutSections.forEach(s => s && (s.style.display = 'none'));
-    if (contactSection) contactSection.style.display = '';
-    aboutLink.classList.remove('active');
-    contactLink.classList.add('active');
-    window.scrollTo({ top: contactSection?.offsetTop || 0, behavior: 'smooth' });
-  }
-  if (aboutLink && contactLink && contactSection) {
-    aboutLink.addEventListener('click', e => { e.preventDefault(); showAbout(); });
-    contactLink.addEventListener('click', e => { e.preventDefault(); showContact(); });
-    // Domyślnie pokazujemy sekcje "O nas"
-    showAbout();
-  }
-});
+}

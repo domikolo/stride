@@ -1,296 +1,214 @@
-<!DOCTYPE html>
+t<!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stride-Services</title>
-  <link rel="icon" type="image/png" href="ikonkastride.png" />
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRIDE SERVICES - Futurystyczny Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      .company-logo {
+        filter: drop-shadow(0 0 7px #1fa46333) drop-shadow(0 0 14px #1fa46322);
+        transition: filter 0.3s;
+        animation: logo-glow-pulse 2.2s infinite alternate;
+      }
+      @keyframes logo-glow-pulse {
+        0% {
+          filter: drop-shadow(0 0 7px #1fa46333) drop-shadow(0 0 14px #1fa46322);
+        }
+        100% {
+          filter: drop-shadow(0 0 14px #1fa46355) drop-shadow(0 0 24px #1fa46322);
+        }
+      }
+    </style>
 </head>
 <body>
-  <div class="header-sharp-bg left"></div>
-  <div class="header-sharp-bg right"></div>
-  <div class="header-sharp-gap"></div>
-  <!-- Strona główna -->
-  <div class="main-page">
-    <header class="site-header">
-      <div class="container">
-        <img src="FO51AA85ACF83a1-01.png" alt="Stride Services logo" class="logo" />
-        <nav class="nav">
-          <a href="#about" class="nav-link active" data-tab="about">O nas</a>
-          <a href="#contact" class="nav-link" data-tab="contact">Kontakt</a>
-        </nav>
-      </div>
-      <div class="cut-line-left"></div>
-      <div class="cut-line-right"></div>
-    </header>
-
-    <main class="main-content">
-      <div class="container">
-        <!-- HERO -->
-        <section class="hero-scene scroll-animate">
-          <h1 class="hero-title">Przyszłość AI jest już tutaj</h1>
-          <p class="hero-subtitle">Rewolucjonizujemy sposób, w jaki firmy komunikują się z klientami dzięki inteligentnym chatbotom AI</p>
-        </section>
-        
-        <!-- O NAS / WPROWADZENIE DO AI -->
-        <section class="about-ai-section scroll-animate">
-          <div class="about-ai-content">
-            <h2>Co to są chatboty AI i dlaczego warto je wybrać?</h2>
-            <div class="about-ai-blocks">
-              <div class="about-ai-block">
-                <p>Chatboty AI to inteligentne programy komputerowe, które wykorzystują sztuczną inteligencję do prowadzenia naturalnych, ludzkich rozmów z klientami. W przeciwieństwie do standardowych chatbotów, które opierają się na sztywnych, zaprogramowanych regułach i ograniczonych scenariuszach odpowiedzi, chatboty AI rozumieją kontekst, uczą się na podstawie interakcji i potrafią odpowiadać na różnorodne pytania w sposób płynny i spersonalizowany. Dzięki temu są bardziej efektywne, elastyczne i przyjazne dla użytkownika.</p>
-              </div>
-              <div class="about-ai-diagram">
-                <!-- Schemat blokowy AI vs zwykły chatbot (SVG) -->
-                <svg viewBox="0 0 420 180" width="320" height="120" class="ai-vs-classic-diagram">
-                  <rect x="10" y="30" width="120" height="40" rx="12" fill="#0C5F33"/>
-                  <text x="70" y="55" text-anchor="middle" fill="#fff" font-size="15">Chatbot AI</text>
-                  <rect x="10" y="90" width="120" height="40" rx="12" fill="#232625"/>
-                  <text x="70" y="115" text-anchor="middle" fill="#fff" font-size="15">Chatbot zwykły</text>
-                  <rect x="290" y="60" width="120" height="40" rx="12" fill="#1de982"/>
-                  <text x="350" y="85" text-anchor="middle" fill="#232625" font-size="15">Klient</text>
-                  <polyline points="130,50 290,80" stroke="#0C5F33" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
-                  <polyline points="130,110 290,80" stroke="#232625" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
-                  <defs>
-                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
-                      <path d="M0,0 L10,5 L0,10 Z" fill="#0C5F33" />
-                    </marker>
-                  </defs>
+    <svg class="background-svg" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="centralGlow" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.08"/>
+          <stop offset="40%" stop-color="#0066cc" stop-opacity="0.05"/>
+          <stop offset="70%" stop-color="#0a0a0a" stop-opacity="0.03"/>
+          <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="dynamicGlow1" cx="20%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.06"/>
+          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.04"/>
+          <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="dynamicGlow2" cx="80%" cy="70%" r="60%">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.05"/>
+          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.03"/>
+          <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      
+      <!-- Centralna poświata -->
+      <ellipse cx="960" cy="540" rx="800" ry="300" fill="url(#centralGlow)"/>
+      
+      <!-- Dynamiczne boczne poświaty -->
+      <ellipse cx="250" cy="400" rx="400" ry="200" fill="url(#dynamicGlow1)"/>
+      <ellipse cx="1670" cy="600" rx="350" ry="180" fill="url(#dynamicGlow2)"/>
+      
+      <!-- Dolne faliste wzory -->
+      <path d="M0 800 Q320 750 640 800 T1280 800 T1920 800" stroke="#00d4ff" stroke-width="1.2" opacity="0.10" fill="none"/>
+      <path d="M0 900 Q320 850 640 900 T1280 900 T1920 900" stroke="#00d4ff" stroke-width="1" opacity="0.08" fill="none"/>
+      <path d="M0 1000 Q320 950 640 1000 T1280 1000 T1920 1000" stroke="#00d4ff" stroke-width="0.9" opacity="0.06" fill="none"/>
+      
+      <!-- Dodatkowe dynamiczne elementy -->
+      <circle cx="200" cy="200" r="3" fill="#00d4ff" opacity="0.10" style="animation: glowPulse 3s ease-in-out infinite;"/>
+      <circle cx="1720" cy="300" r="2" fill="#00d4ff" opacity="0.07" style="animation: glowPulse 4s ease-in-out infinite;"/>
+      <circle cx="150" cy="800" r="2.5" fill="#00d4ff" opacity="0.09" style="animation: glowPulse 3.5s ease-in-out infinite;"/>
+      <circle cx="1770" cy="900" r="3" fill="#00d4ff" opacity="0.10" style="animation: glowPulse 2.5s ease-in-out infinite;"/>
                 </svg>
-                <ul class="ai-vs-list">
-                  <li><b>Elastyczność:</b> AI analizuje pytania w czasie rzeczywistym i odpowiada na nietypowe lub złożone zapytania.</li>
-                  <li><b>Naturalność rozmowy:</b> AI prowadzi rozmowy w sposób zbliżony do ludzkiego, standardowe chatboty często brzmią mechanicznie.</li>
-                  <li><b>Uczenie się:</b> AI poprawia odpowiedzi w miarę zbierania danych, zwykłe chatboty wymagają ręcznego aktualizowania skryptów.</li>
-                  <li><b>Integracje:</b> AI integruje się z narzędziami (CRM, kalendarze, rezerwacje), zwykłe chatboty często działają w izolacji.</li>
-                </ul>
+    <!-- Animowane cząsteczki w tle -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Lewa strona - logo -->
+    <div class="logo-container">
+        <!-- Logo zostało usunięte -->
               </div>
+    
+    <!-- Profesjonalny design -->
+    <div class="hero-container">
+        <div class="hero-content">
+            <div class="hero-title">
+                <h1 class="title-line">
+                    <span class="title-word">Inteligentny</span>
+                </h1>
+                <h1 class="title-line">
+                    <span class="title-word highlight">chatbot AI</span>
+                </h1>
+                <h1 class="title-line">
+                    <span class="title-word">dla twojej firmy</span>
+                </h1>
             </div>
-            <div class="about-ai-summary">
-              Wybierając chatbot AI od Stride-Services, zyskujesz narzędzie, które nie tylko automatyzuje obsługę klienta, ale także buduje lepsze relacje z użytkownikami, zwiększa sprzedaż i oszczędza Twój czas.
-            </div>
+            
+                                    <div class="hero-subtitle">
+                            <p>Twój biznes zasługuje na więcej. Natychmiastowe wsparcie 24/7, pełna integracja i personalizacja. Rewolucja w obsłudze klienta.</p>
           </div>
-        </section>
-
-        <!-- O FIRMIE I USŁUDZE (akordeon + nieskończoność) -->
-        <section class="about-service-section scroll-animate">
-          <div class="about-service-flex">
-            <div class="about-service-main">
-              <h2>Informacje o firmie</h2>
-              <div class="about-service-desc">
-                Stride-Services to młoda, dynamiczna firma specjalizująca się w tworzeniu spersonalizowanych chatbotów AI, które rewolucjonizują sposób, w jaki firmy komunikują się z klientami. Nasza misja to pełne zadowolenie klienta dzięki rozwiązaniom szytym na miarę, idealnie zintegrowanym z jego biznesem. Nie idziemy w masówkę – stawiamy na jakość, nie ilość. Nasze chatboty są ograniczone tylko przez kod, co daje niemal nieograniczone możliwości. Zespół tworzą Dominik Oczki, główny programista i specjalista AI, oraz Jakub Płaczek, ekspert od współpracy z klientami i współzałożyciel. Razem łączymy pasję do AI z wieloletnim doświadczeniem w tej szybko rozwijającej się dziedzinie, widząc w niej przyszłość biznesu.
+            
+            <div class="hero-metrics">
+                <div class="metric">
+                    <div class="metric-value" id="metric1" data-target="85">0%</div>
+                    <div class="metric-label">Redukcja czasu odpowiedzi</div>
               </div>
-              <div class="about-service-accordion">
-                <button class="accordion-toggle" id="service-accordion-btn" aria-expanded="false" aria-controls="service-accordion-content">Nasza usługa <span class="accordion-arrow">▼</span></button>
-                <div class="accordion-content" id="service-accordion-content" hidden>
-                  <p>Oferujemy chatboty AI, które automatyzują obsługę klienta, ale nasze możliwości wykraczają daleko poza to. Możemy stworzyć rozwiązania zintegrowane z kalendarzami, Excelem, systemami rezerwacji czy innymi narzędziami, takimi jak umawianie spotkań czy zbieranie danych klientów. W przyszłości planujemy rozwijać bardziej zaawansowane funkcje, jak infolinie AI czy automatyczne rozmowy telefoniczne. Skupiamy się na firmach usługowych – od IT, przez edukację, zdrowie, po finanse i consulting. Niezależnie od branży, każdy chatbot jest projektowany tak, by idealnie pasował do Twoich potrzeb. Korzystamy z nowoczesnych technologii AI, by dostarczyć Ci produkt na najwyższym poziomie.</p>
+                <div class="metric">
+                    <div class="metric-value" id="metric2" data-target="60">0%</div>
+                    <div class="metric-label">Mniej zapytań do człowieka</div>
                 </div>
-              </div>
-            </div>
-            <div class="about-service-tech">
-              <h3>Nasze technologie & integracje</h3>
-              <div class="infinity-anim-wrap">
-                <svg class="infinity-anim" viewBox="0 0 120 60" width="120" height="60">
-                  <defs>
-                    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#1de982" stop-opacity="1"/>
-                      <stop offset="100%" stop-color="#0C5F33" stop-opacity="0.2"/>
-                    </radialGradient>
-                    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
-                      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path d="M20,30 Q20,10 40,10 Q60,10 60,30 Q60,50 80,50 Q100,50 100,30 Q100,10 80,10 Q60,10 60,30 Q60,50 40,50 Q20,50 20,30 Z" stroke="url(#glow)" stroke-width="6" fill="none" filter="url(#glowFilter)">
-                    <animate attributeName="stroke-dashoffset" values="0;120;0" dur="2.5s" repeatCount="indefinite"/>
-                  </path>
-                </svg>
-                <div class="infinity-desc">Ogranicza nas tylko kod</div>
+                <div class="metric">
+                    <div class="metric-value" id="metric3" data-target="95">0%</div>
+                    <div class="metric-label">Zadowolenie klientów</div>
               </div>
             </div>
           </div>
-        </section>
+    </div>
+    
+    <!-- Logo w prawym górnym rogu -->
+    <div class="top-right-logo">
+        <img src="logo.png" alt="STRIDE SERVICES" style="width: 360px; height: auto; opacity: 1; filter: none;">
+            </div>
+    
+    <!-- Tekst kontaktowy w prawym górnym rogu -->
+    <div style="position: fixed; top: 32px; right: 160px; z-index: 30; display: flex; align-items: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 19px; color: white; font-weight: 300;">
+        <!-- Telefon -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="white"/>
+        </svg>
+        <span>+48 785226886, &nbsp;+48 728381170</span>
+        
+        <span style="margin: 0 12px; opacity: 0.5;">|</span>
+        
+        <!-- Email -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
+            <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M4 8l8 5 8-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span style="margin-left: 8px;">jakub@stride.services.com</span>
+            </div>
+    <!-- ZAMIANA: Usuwam stary div.header-green-bar i wstawiam SVG -->
+    <!-- <div class="header-green-bar"></div> -->
+    <svg class="header-green-bar-svg" width="990" height="200" viewBox="0 0 990 200" style="position:fixed;top:-45px;left:0;z-index:20;transform:scaleY(-1);opacity:0.95;filter:blur(0.5px);">
+      <polygon 
+        points="0,0 891,0 990,200 0,200" 
+        fill="#0a0a0a" />
+      <!-- Górna krawędź - neon cyjan -->
+      <polyline 
+        points="0,0 891,0" 
+        stroke="#00d4ff" 
+        stroke-width="2.5" 
+        opacity="0.38"
+        fill="none" />
+      <polyline 
+        points="0,0 891,0" 
+        stroke="#00d4ff" 
+        stroke-width="2" 
+        opacity="0.30"
+        fill="none" />
+      <!-- Ścięta krawędź - neon cyjan -->
+      <polyline 
+        points="891,0 990,200" 
+        stroke="#00d4ff" 
+        stroke-width="2.5" 
+        opacity="0.38"
+        fill="none" />
+      <polyline 
+        points="891,0 990,200" 
+        stroke="#00d4ff" 
+        stroke-width="2" 
+        opacity="0.30"
+        fill="none" />
+    </svg>
+    <!-- ZAMIANA: Usuwam stary div.top-contact-box i wstawiam SVG -->
+    <!-- <div class="top-contact-box">...</div> -->
+    <svg class="top-contact-bar-svg" width="990" height="200" viewBox="0 0 990 200" style="position:fixed;top:-100px;right:-100px;z-index:20;opacity:0.85;transform:scaleY(-1) scaleX(-1);filter:blur(0.5px);">
+      <polygon 
+        points="0,0 990,0 891,200 0,200" 
+        fill="#0a0a0a" />
+      <!-- Górna krawędź - neon cyjan -->
+      <polyline 
+        points="0,0 990,0" 
+        stroke="#00d4ff" 
+        stroke-width="2.5" 
+        opacity="0.38"
+        fill="none" />
+      <polyline 
+        points="0,0 990,0" 
+        stroke="#00d4ff" 
+        stroke-width="2" 
+        opacity="0.30"
+        fill="none" />
+      <!-- Ścięta krawędź - neon cyjan -->
+      <polyline 
+        points="990,0 891,200" 
+        stroke="#00d4ff" 
+        stroke-width="2.5" 
+        opacity="0.38"
+        fill="none" />
+      <polyline 
+        points="990,0 891,200" 
+        stroke="#00d4ff" 
+        stroke-width="2" 
+        opacity="0.30"
+        fill="none" />
+      
 
-        <!-- PROCES WSPÓŁPRACY (timeline) -->
-        <section class="timeline-section scroll-animate">
-          <h2>Proces współpracy</h2>
-          <div class="timeline-horizontal">
-            <div class="timeline-step" tabindex="0">
-              <div class="timeline-dot">1</div>
-              <div class="timeline-label">Analiza potrzeb</div>
-              <div class="timeline-detail">Tworzenie chatbota zaczynamy od dokładnej analizy Twoich potrzeb i struktury firmy – sprawdzamy, jak działa Twoja strona, system umawiania spotkań czy inne procesy, by zapewnić pełną integrację.</div>
-            </div>
-            <div class="timeline-step" tabindex="0">
-              <div class="timeline-dot">2</div>
-              <div class="timeline-label">Projektowanie</div>
-              <div class="timeline-detail">Następnie przechodzimy do projektowania, które trwa zwykle 2-3 tygodnie. W tym czasie jesteśmy w stałym kontakcie, by dopracować każdy szczegół i upewnić się, że wszystko Ci odpowiada.</div>
-            </div>
-            <div class="timeline-step" tabindex="0">
-              <div class="timeline-dot">3</div>
-              <div class="timeline-label">Realizacja</div>
-              <div class="timeline-detail">Proste projekty realizujemy w około 2 tygodnie, a bardziej złożone, z wieloma integracjami, mogą zająć więcej czasu – wszystko zależy od Twoich wymagań.</div>
-            </div>
-            <div class="timeline-step" tabindex="0">
-              <div class="timeline-dot">4</div>
-              <div class="timeline-label">Wsparcie</div>
-              <div class="timeline-detail">Po uruchomieniu chatbota oferujemy bieżące wsparcie wliczone w cene kosztów utrzymania, regularne aktualizacje i możliwość dodawania nowych funkcji, by Twoje rozwiązanie zawsze było na czasie. Odpowiadamy na zgłoszenia w ciągu kilku godzin w dni robocze, zapewniając szybką pomoc w razie potrzeby.</div>
-            </div>
-            <div class="timeline-step" tabindex="0">
-              <div class="timeline-dot">5</div>
-              <div class="timeline-label">Portal klienta</div>
-              <div class="timeline-detail">Dodatkowo, każdy klient otrzymuje dostęp do dedykowanego portalu, gdzie może monitorować pracę chatbota, sprawdzać statystyki, pytania od użytkowników i ich odpowiedzi, co daje pełną kontrolę nad działaniem systemu.</div>
-            </div>
+    </svg>
+    
+    <div class="container">
+                <div class="left-side">
+            <!-- logo-container przeniesione wyżej -->
           </div>
-        </section>
-
-        <!-- KORZYŚCI I KOSZTY (tabela + oferta) -->
-        <section class="benefits-costs-section scroll-animate">
-          <div class="benefits-costs-flex">
-            <div class="benefits-block">
-              <h2>Korzyści</h2>
-              <ul class="benefits-list">
-                <li>Pełna personalizacja i bliski kontakt z klientem na każdym etapie współpracy</li>
-                <li>Dostosowanie do Twoich potrzeb</li>
-                <li>Szybsze poznanie oferty przez klientów</li>
-                <li>Odpowiedzi 24/7</li>
-                <li>Zbieranie danych kontaktowych (maile, telefony)</li>
-                <li>Oszczędność czasu – skupiasz się na umówionych klientach</li>
-                <li>Szybkie odpowiedzi zwiększają sprzedaż i zaufanie</li>
-                <li>AI to przyszłość – zacznij ją wykorzystywać już teraz!</li>
-              </ul>
-            </div>
-            <div class="costs-block">
-              <h2>Koszty</h2>
-              <ul class="costs-list">
-                <li>Budowa chatbota zaczyna się od 1600 zł, w zależności od jego złożoności i potrzebnych integracji.</li>
-                <li>Utrzymanie to minimum 800 zł miesięcznie, w zależności od ruchu na stronie.</li>
-              </ul>
-              <div class="faq-hint">Szukasz FAQ? <span class="faq-chatbot">Zapytaj chatbota!</span></div>
-              <div class="special-offer-box">Specjalna oferta: pierwszy miesiąc pracy chatbota na Twojej stronie za darmo (po opłaceniu budowy).</div>
-            </div>
-          </div>
-          <div class="comparison-table-wrap">
-            <h3>Chatbot AI vs. Chatbot zwykły</h3>
-            <table class="comparison-table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Chatbot AI</th>
-                  <th>Chatbot zwykły</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Naturalność rozmowy</td>
-                  <td>Płynna, zbliżona do ludzkiej</td>
-                  <td>Sztywna, schematyczna</td>
-                </tr>
-                <tr>
-                  <td>Elastyczność</td>
-                  <td>Odpowiada na nietypowe pytania, rozumie kontekst</td>
-                  <td>Ograniczony do zaprogramowanych ścieżek</td>
-                </tr>
-                <tr>
-                  <td>Uczenie się</td>
-                  <td>Samodoskonalenie na podstawie interakcji</td>
-                  <td>Wymaga ręcznego aktualizowania skryptów</td>
-                </tr>
-                <tr>
-                  <td>Integracje</td>
-                  <td>Łatwa integracja z CRM, kalendarzami, rezerwacjami</td>
-                  <td>Często działa w izolacji</td>
-                </tr>
-                <tr>
-                  <td>Personalizacja</td>
-                  <td>Rekomendacje, promocje, indywidualne podejście</td>
-                  <td>Bardzo ograniczona</td>
-                </tr>
-                <tr>
-                  <td>Dostępność</td>
-                  <td>24/7</td>
-                  <td>Zwykle tylko w godzinach pracy</td>
-                </tr>
-                <tr>
-                  <td>Koszt wdrożenia</td>
-                  <td>Od 1600 zł</td>
-                  <td>Od 1000 zł</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- PRZYKŁADY I DEMO -->
-        <section class="examples-section scroll-animate">
-          <h2>Przykłady i demo</h2>
-          <div class="examples-block">
-            <p>Choć jesteśmy nową firmą, nasze doświadczenie w tworzeniu nowoczesnych chatbotów AI pozwala nam oferować rozwiązania, które zmieniają sposób prowadzenia biznesu. Nasz chatbot to wszechstronny asystent – niezależnie od tego, czy oferujesz usługi konsultingowe, zarządzasz rezerwacjami, sprzedajesz produkty czy świadczysz wsparcie techniczne. Oto, co może dla Ciebie zrobić:</p>
-            <ul class="examples-list">
-              <li>Automatyzacja rutynowych zadań: Odpowiada na pytania o ceny, godziny otwarcia czy szczegóły usług w sposób naturalny i precyzyjny.</li>
-              <li>Obsługa klienta: Zarządza reklamacjami, zwrotami, statusami zamówień czy instrukcjami, odciążając Twój zespół.</li>
-              <li>Rezerwacje i planowanie: Umożliwia szybkie umawianie spotkań i rezerwacje usług z integracją z kalendarzami lub systemami rezerwacyjnymi.</li>
-              <li>Personalizacja: Analizuje preferencje klientów i oferuje spersonalizowane rekomendacje, np. promocje czy usługi dodatkowe.</li>
-              <li>Wsparcie 24/7: Odpowiada na zapytania o każdej porze, zwiększając satysfakcję i lojalność klientów.</li>
-              <li>Generowanie leadów: Zbiera dane kontaktowe i kwalifikuje potencjalnych klientów, przekazując gotowe leady Twojemu zespołowi.</li>
-              <li>Zbieranie opinii: Automatycznie prosi o feedback po usłudze, pomagając poprawić ofertę.</li>
-            </ul>
-            <p>Wszystko to działa płynnie w języku polskim lub dowolnym innym, z integracją z Twoimi systemami, takimi jak CRM, kalendarz czy platformy e-commerce.<br>
-            Chcesz zobaczyć, jak to działa? Umów się na niezobowiązującą rozmowę przez Zoom, Teams lub inną platformę, a w 2-3 tygodnie przygotujemy dla Ciebie w pełni funkcjonalny prototyp chatbota, dopasowany do Twoich potrzeb. Pokażemy Ci, jak zautomatyzować procesy, zwiększyć satysfakcję klientów i wygenerować więcej przychodów – niezależnie od wielkości Twojej firmy.</p>
-            <div class="examples-contact">
-              <b>Kontakt:</b> jakub@stride-services.com, Dominik (728381170), Jakub (785226886) lub zostaw swój numer/e-mail w czacie – odezwiemy się ASAP!
-            </div>
-          </div>
-        </section>
-
-        <!-- SEKCKJA KONTAKT -->
-        <section class="contact-section scroll-animate" id="contact-section">
-          <div class="contact-block">
-            <h2>Kontakt</h2>
-            <table class="contact-table contact-table-wide">
-              <tbody>
-                <tr>
-                  <th>E-mail</th>
-                  <td><a href="mailto:jakub@stride-services.com">jakub@stride-services.com</a></td>
-                </tr>
-                <tr>
-                  <th>Telefon</th>
-                  <td>
-                    <div class="contact-tel"><span>Dominik:</span> <a href="tel:728381170">728 381 170</a></div>
-                    <div class="contact-tel"><span>Jakub:</span> <a href="tel:785226886">785 226 886</a></div>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Chatbot</th>
-                  <td>Zostaw swój numer lub e-mail w czacie – odezwiemy się ASAP!</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
-    </main>
+        <div class="right-side">
+                        <div class="chat-container neon-float">
+                <div class="chat-messages" id="messages">
+                    <!-- Wiadomości będą dodawane tutaj -->
   </div>
 
-  <!-- Widget czatu -->
-  <button id="open-btn" aria-label="Otwórz czat">
-    <span class="dots" aria-hidden="true">
-      <span></span><span></span><span></span>
-    </span>
-  </button>
-
-  <div id="chat-widget" class="hidden">
-    <div class="widget-header">Asystent Stride-Services</div>
-    <div class="widget-body">
-      <div id="messages" class="messages"></div>
-    </div>
-    <div class="widget-footer">
-      <!-- Sekcja polityki RODO -->
+                <!-- Sekcja polityki RODO - przeniesiona do środka -->
       <div id="privacy-section" class="privacy-section">
         <div class="privacy-text">
-          Aby rozpocząć czat, musisz zaakceptować naszą <a href="https://stride-services.pl/polityka-prywatnosci.html" target="_blank" class="privacy-link">Politykę Prywatności</a>.
+                        Aby rozpocząć czat, musisz zaakceptować naszą <a href="polityka-prywatnosci/index.html" target="_blank" class="privacy-link">Politykę Prywatności</a>.
         </div>
         <div class="privacy-checkbox-container">
           <label class="privacy-checkbox-label">
@@ -302,17 +220,246 @@
         <button id="start-chat-btn" class="start-chat-btn" disabled>Rozpocznij czat</button>
       </div>
       
+                <div class="chat-input-container">
       <!-- Formularz wiadomości (początkowo ukryty) -->
       <form id="message-form" class="message-form hidden">
-        <input type="text" id="user-input" placeholder="Napisz wiadomość..." autocomplete="off" />
-        <button type="submit" class="send-btn" aria-label="Wyślij wiadomość">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                id="user-input" 
+                                placeholder="Type your message..." 
+                                class="message-input"
+                            >
+                            <button type="button" class="send-btn" style="border-radius: 16px; border: none; padding: 10px 14px; cursor: pointer; width: 50px; height: 50px; opacity: 0.8;">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
           </svg>
         </button>
+                        </div>
       </form>
     </div>
   </div>
+        </div>
+    </div>
+    
+
+
+    <script>
+        // Generowanie animowanych cząsteczek
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 60;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Inicjalizacja cząsteczek
+        createParticles();
+        
+        // Animacja statystyk
+        function animateMetrics() {
+            const metrics = [
+                { id: 'metric1', target: 85 },
+                { id: 'metric2', target: 60 },
+                { id: 'metric3', target: 95 }
+            ];
+            
+            metrics.forEach(metric => {
+                const element = document.getElementById(metric.id);
+                const target = metric.target;
+                const duration = 4000; // 4 sekundy
+                const startTime = Date.now();
+                
+                function updateValue() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Funkcja ease-out (szybko na początku, potem zwalnia)
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    
+                    const currentValue = Math.floor(easeOut * target);
+                    element.textContent = currentValue + '%';
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateValue);
+                    } else {
+                        element.textContent = target + '%'; // Upewnij się że kończy na dokładnej wartości
+                    }
+                }
+                
+                updateValue();
+            });
+        }
+        
+        // Uruchom animację po załadowaniu strony
+        setTimeout(animateMetrics, 500); // Małe opóźnienie żeby strona się załadowała
+        
+        // Zoptymalizowana obsługa formularza
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('message-form');
+            const input = document.getElementById('user-input');
+            const messages = document.getElementById('messages');
+            const sendBtn = document.querySelector('.send-btn');
+            
+            // Style dla paska scrollowania
+            messages.style.scrollbarWidth = 'thin';
+            messages.style.scrollbarColor = '#00d4ff #0a0a0a';
+            
+            // Style dla WebKit (Chrome, Safari)
+            const style = document.createElement('style');
+                            style.textContent = `
+                    #messages::-webkit-scrollbar {
+                        width: 8px;
+                    }
+                    #messages::-webkit-scrollbar-track {
+                        background: #0a0a0a;
+                        border-radius: 4px;
+                    }
+                    #messages::-webkit-scrollbar-thumb {
+                        background: #00d4ff;
+                        border-radius: 4px;
+                    }
+                    #messages::-webkit-scrollbar-thumb:hover {
+                        background: #00b8e6;
+                    }
+                    
+                    @keyframes typingBounce {
+                        0%, 60%, 100% {
+                            transform: translateY(0);
+                            opacity: 0.5;
+                        }
+                        30% {
+                            transform: translateY(-3px);
+                            opacity: 0.9;
+                        }
+                    }
+                    
+                    .typing-dots {
+                        display: inline-flex;
+                        gap: 4px;
+                        align-items: center;
+                    }
+                    
+                    .typing-dots .dot {
+                        width: 8px;
+                        height: 8px;
+                        background: rgba(255, 255, 255, 0.7);
+                        border-radius: 50%;
+                        animation: typingBounce 1.4s infinite;
+                    }
+                    
+                    .typing-dots .dot:nth-child(1) {
+                        animation-delay: 0s;
+                    }
+                    
+                    .typing-dots .dot:nth-child(2) {
+                        animation-delay: 0.2s;
+                    }
+                    
+                    .typing-dots .dot:nth-child(3) {
+                        animation-delay: 0.4s;
+                    }
+                `;
+            document.head.appendChild(style);
+            
+            // Style dla paska scrollowania
+            
+            function createMessageElement(text, isUser = true) {
+                const div = document.createElement('div');
+                div.className = isUser ? 'message user-message' : 'message assistant-message';
+                
+                // Dodaj animację
+                div.style.opacity = '0';
+                div.style.transform = 'translateY(20px)';
+                div.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                
+                div.innerHTML = '<p>' + text + '</p>';
+                
+                // Uruchom animację po dodaniu do DOM
+                setTimeout(() => {
+                    div.style.opacity = '1';
+                    div.style.transform = 'translateY(0)';
+                }, 10);
+                
+                return div;
+            }
+            
+            function sendMessage() {
+                const message = input.value.trim();
+                if (!message) return;
+                
+                // Dodaj wiadomość użytkownika
+                const userDiv = createMessageElement(message, true);
+                messages.appendChild(userDiv);
+                
+                // Wyczyść pole natychmiast
+                input.value = '';
+                
+                // Auto-scroll
+                requestAnimationFrame(() => {
+                    messages.scrollTop = messages.scrollHeight;
+                });
+                
+                                                    // Symuluj odpowiedź bota
+                setTimeout(() => {
+                    // Dodaj animację pisania
+                    const typingDiv = document.createElement('div');
+                    typingDiv.className = 'message assistant-message';
+                    typingDiv.style.opacity = '0';
+                    typingDiv.style.transform = 'translateY(20px)';
+                    typingDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    typingDiv.innerHTML = '<p><span class="typing-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></p>';
+                    messages.appendChild(typingDiv);
+                    
+                    // Animuj pojawienie się
+                    setTimeout(() => {
+                        typingDiv.style.opacity = '1';
+                        typingDiv.style.transform = 'translateY(0)';
+                    }, 10);
+                    
+                    requestAnimationFrame(() => {
+                        messages.scrollTop = messages.scrollHeight;
+                    });
+                    
+                    // Usuń animację pisania i pokaż właściwą wiadomość
+                    setTimeout(() => {
+                        typingDiv.remove();
+                        const botDiv = createMessageElement('Dziękuję za wiadomość! To jest testowa odpowiedź z dłuższym tekstem, żeby sprawdzić jak wygląda maksymalna długość dymków czatu. Ten tekst powinien być wystarczająco długi, żeby zobaczyć jak dymek się zachowuje przy dłuższych wiadomościach.', false);
+                        messages.appendChild(botDiv);
+                        requestAnimationFrame(() => {
+                            messages.scrollTop = messages.scrollHeight;
+                        });
+                    }, 2000);
+                }, 1000);
+            }
+            
+            // Pojedynczy event listener dla przycisku
+            sendBtn.addEventListener('click', sendMessage, { passive: true });
+            
+            // Pojedynczy event listener dla Enter
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            }, { passive: false });
+            
+            // Zapobiegaj submit formularza
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                sendMessage();
+            }, { passive: false });
+            
+                            // Automatyczna pierwsza wiadomość od bota - usunięta, będzie dodawana po zaakceptowaniu polityki
+        });
+    </script>
 
   <script src="chat.js"></script>
 </body>
