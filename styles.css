@@ -506,11 +506,7 @@ body::before {
         overflow-y: auto;
     }
     
-    /* Ukryj elementy które nie są potrzebne na mobile */
-    .contact-info,
-    .top-right-logo,
-    .header-green-bar-svg,
-    .top-contact-bar-svg,
+    /* Ukryj tylko niepotrzebne elementy na mobile */
     .particles {
         display: none !important;
     }
@@ -532,7 +528,7 @@ body::before {
         max-width: none;
         width: 100vw;
         height: 100vh;
-        padding: 40px 20px;
+        padding: 120px 20px 40px 20px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -566,6 +562,34 @@ body::before {
         font-size: 2rem;
     }
     
+    /* Logo i kontakt na mobile */
+    .top-right-logo {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 30;
+    }
+    
+    .top-right-logo img {
+        width: 200px;
+        height: auto;
+    }
+    
+    .contact-info {
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 30;
+        font-size: 14px;
+        gap: 6px;
+    }
+    
+    .contact-info span {
+        font-size: 14px;
+    }
+    
     /* Chat sekcja - pełny ekran */
     .right-side {
         width: 100vw;
@@ -578,11 +602,14 @@ body::before {
     }
     
     .chat-container {
-        width: 100%;
-        max-width: 100%;
+        width: 95%;
+        max-width: 95%;
         height: 90vh;
-        margin: 0;
+        margin: 0 auto;
         border-radius: 20px;
+        position: relative;
+        left: 0;
+        right: 0;
     }
     
     /* Left side ukryj na mobile */
