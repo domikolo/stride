@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 * {
     margin: 0;
@@ -1606,4 +1607,24 @@ body::before {
 .message em {
   font-style: italic;
   color: rgba(255, 255, 255, 0.9);
+}
+
+/* Style dla danych kontaktowych */
+.contact-info {
+  position: fixed;
+  top: 32px;
+  right: 160px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 19px;
+  color: white;
+  font-weight: 400;
+}
+
+.contact-info .separator {
+  margin: 0 12px;
+  opacity: 0.5;
 }
