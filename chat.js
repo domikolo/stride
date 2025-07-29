@@ -187,26 +187,45 @@ async function sendMessage(query) {
   }
 }
 
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const txt = input.value.trim();
-  if (txt) sendMessage(txt);
-});
+// Upewnij się że DOM jest załadowany
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, setting up chat listeners');
+  console.log('Form:', form);
+  console.log('Input:', input);
+  console.log('Send button:', document.querySelector('.send-btn'));
 
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    form.dispatchEvent(new Event('submit'));
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      console.log('Form submit triggered');
+      const txt = input.value.trim();
+      if (txt) {
+        console.log('Sending message:', txt);
+        sendMessage(txt);
+      }
+    });
+  }
+
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        console.log('Enter pressed, dispatching submit');
+        form.dispatchEvent(new Event('submit'));
+      }
+    });
+  }
+
+  // Event listener dla przycisku send
+  const sendButton = document.querySelector('.send-btn');
+  if (sendButton) {
+    sendButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Send button clicked');
+      form.dispatchEvent(new Event('submit'));
+    });
   }
 });
-
-// Event listener dla przycisku send
-const sendButton = document.querySelector('.send-btn');
-if (sendButton) {
-  sendButton.addEventListener('click', () => {
-    form.dispatchEvent(new Event('submit'));
-  });
-}
 
 // --- Obsługa zakładek ---
 const navLinks = document.querySelectorAll('.nav-link');
