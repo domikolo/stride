@@ -391,71 +391,9 @@ t<!DOCTYPE html>
                 return div;
             }
             
-            function sendMessage() {
-                const message = input.value.trim();
-                if (!message) return;
-                
-                // Dodaj wiadomość użytkownika
-                const userDiv = createMessageElement(message, true);
-                messages.appendChild(userDiv);
-                
-                // Wyczyść pole natychmiast
-                input.value = '';
-                
-                // Auto-scroll
-                requestAnimationFrame(() => {
-                    messages.scrollTop = messages.scrollHeight;
-                });
-                
-                                                    // Symuluj odpowiedź bota
-                setTimeout(() => {
-                    // Dodaj animację pisania
-                    const typingDiv = document.createElement('div');
-                    typingDiv.className = 'message assistant-message';
-                    typingDiv.style.opacity = '0';
-                    typingDiv.style.transform = 'translateY(20px)';
-                    typingDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                    typingDiv.innerHTML = '<p><span class="typing-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></p>';
-                    messages.appendChild(typingDiv);
-                    
-                    // Animuj pojawienie się
-                    setTimeout(() => {
-                        typingDiv.style.opacity = '1';
-                        typingDiv.style.transform = 'translateY(0)';
-                    }, 10);
-                    
-                    requestAnimationFrame(() => {
-                        messages.scrollTop = messages.scrollHeight;
-                    });
-                    
-                    // Usuń animację pisania i pokaż właściwą wiadomość
-                    setTimeout(() => {
-                        typingDiv.remove();
-                        const botDiv = createMessageElement('Dziękuję za wiadomość! To jest testowa odpowiedź z dłuższym tekstem, żeby sprawdzić jak wygląda maksymalna długość dymków czatu. Ten tekst powinien być wystarczająco długi, żeby zobaczyć jak dymek się zachowuje przy dłuższych wiadomościach.', false);
-                        messages.appendChild(botDiv);
-                        requestAnimationFrame(() => {
-                            messages.scrollTop = messages.scrollHeight;
-                        });
-                    }, 2000);
-                }, 1000);
-            }
+            // Testowa funkcja sendMessage usunięta - używamy prawdziwej z chat.js
             
-            // Pojedynczy event listener dla przycisku
-            sendBtn.addEventListener('click', sendMessage, { passive: true });
-            
-            // Pojedynczy event listener dla Enter
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            }, { passive: false });
-            
-            // Zapobiegaj submit formularza
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                sendMessage();
-            }, { passive: false });
+            // Event listenery dla formularza są już w chat.js
             
                             // Automatyczna pierwsza wiadomość od bota - usunięta, będzie dodawana po zaakceptowaniu polityki
         });

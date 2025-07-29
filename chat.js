@@ -120,8 +120,8 @@ function scrollToBottom() {
 
 function showTypingIndicator() {
   const typingDiv = document.createElement('div');
-  typingDiv.className = 'typing-indicator';
-  typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  typingDiv.className = 'message assistant-message';
+  typingDiv.innerHTML = '<p><span class="typing-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></p>';
   messages.appendChild(typingDiv);
   
   // Auto-scroll do typing indicator
@@ -199,6 +199,14 @@ input.addEventListener('keydown', e => {
     form.dispatchEvent(new Event('submit'));
   }
 });
+
+// Event listener dla przycisku send
+const sendButton = document.querySelector('.send-btn');
+if (sendButton) {
+  sendButton.addEventListener('click', () => {
+    form.dispatchEvent(new Event('submit'));
+  });
+}
 
 // --- Obsługa zakładek ---
 const navLinks = document.querySelectorAll('.nav-link');
