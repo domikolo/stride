@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body { 
     font-family: 'Arial', 'Helvetica', sans-serif;
     background: #0a0a0a;
@@ -495,13 +499,95 @@ body::before {
     -webkit-backdrop-filter: blur(28px) saturate(1.35);
 }
 
+/* Mobile responsive design */
 @media (max-width: 900px) {
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    
+    /* Ukryj elementy które nie są potrzebne na mobile */
+    .contact-info,
+    .top-right-logo,
+    .header-green-bar-svg,
+    .top-contact-bar-svg,
+    .particles {
+        display: none !important;
+    }
+    
+    /* Main container - pionowy layout */
+    .container {
+        flex-direction: column;
+        height: auto;
+        width: 100vw;
+        padding: 0;
+    }
+    
+    /* Hero sekcja - pełny ekran */
+    .hero-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        max-width: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+    
+    .hero-content {
+        text-align: center;
+        max-width: 100%;
+        padding: 0;
+        margin-top: 0;
+    }
+    
+    .hero-title .title-word {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle p {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+    }
+    
+    .hero-metrics {
+        gap: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+    }
+    
+    /* Chat sekcja - pełny ekran */
+    .right-side {
+        width: 100vw;
+        height: 100vh;
+        margin-top: 0;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
     .chat-container {
-        width: 98vw;
-        height: 70vh;
-        min-width: 0;
-        min-height: 0;
-        border-radius: 16px;
+        width: 100%;
+        max-width: 100%;
+        height: 90vh;
+        margin: 0;
+        border-radius: 20px;
+    }
+    
+    /* Left side ukryj na mobile */
+    .left-side {
+        display: none;
     }
 }
 
@@ -1026,74 +1112,7 @@ body::before {
     }
 }
 
-/* Responsywność */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-    
-    .chat-container {
-        width: 90%;
-        transform: scale(1);
-        height: 400px;
-    }
-    
-    .logo-container {
-        position: static;
-        margin: 20px auto;
-        text-align: center;
-    }
-    
-    .company-logo {
-        max-width: 200px;
-        max-height: 100px;
-    }
-    
-    .footer-contact-box,
-    .footer-contact-box-gray {
-        min-width: 90%;
-        margin: 12px auto;
-    }
-    
-    .header-green-bar {
-        width: 100%;
-        height: 150px;
-    }
-    
-    .hero-content {
-        margin-top: 60px;
-        padding: 0 20px;
-        text-align: left;
-    }
-    
-    .hero-title {
-    font-size: 2.5rem;
-  }
-  
-    .hero-description {
-        font-size: 1rem;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .hero-stats {
-        flex-direction: column;
-        gap: 16px;
-    }
-    
-    .stat-item {
-        flex-direction: row;
-        align-items: center;
-        gap: 12px;
-    }
-    
-    .stat-number {
-    font-size: 1.5rem;
-  }
-}
+
 
 .chat-container.glass-green {
     background: rgba(18,22,20,0.38);
