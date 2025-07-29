@@ -1,7 +1,6 @@
 const API_URL = 'https://aoxd3r49fa.execute-api.eu-central-1.amazonaws.com/chat';
 
-const openBtn  = document.getElementById('open-btn');
-const widget   = document.getElementById('chat-widget');
+// Stare elementy usunięte - openBtn i widget nie istnieją w nowym HTML
 const form     = document.getElementById('message-form');
 const input    = document.getElementById('user-input');
 const messages = document.getElementById('messages');
@@ -35,10 +34,7 @@ if (privacyCheckbox && startChatBtn) {
   });
 }
 
-// CALL-OUT logic
-// Usunięto logikę callout z napisem 'Potrzebujesz pomocy?'
-
-let callCount = 0;
+// Stare funkcje callout, TADA effect usunięte - nie są potrzebne
 
 // Funkcja do dodawania wiadomości
 function addMessage(text, type) {
@@ -56,22 +52,7 @@ function addMessage(text, type) {
   // Auto-scroll do najnowszej wiadomości
   messages.scrollTop = messages.scrollHeight;
 }
-function showCallout() {
-  if (widget && !widget.classList.contains('hidden')) return;
-  if (callCount++ >= 3) return;
-  callout.classList.add('callout--visible');
-  setTimeout(() => callout.classList.remove('callout--visible'), 6000);
-}
-setTimeout(showCallout, 20000);
-setInterval(showCallout, 60000);
-
-// TADA effect
-setInterval(() => {
-  if (widget.classList.contains('hidden')) {
-    openBtn.classList.add('tada');
-    setTimeout(() => openBtn.classList.remove('tada'), 1000);
-  }
-}, 30000);
+// Stare funkcje showCallout i TADA effect usunięte
 
 const sessionKey = 'sessionId';
 let sessionId = localStorage.getItem(sessionKey) || crypto.randomUUID();
@@ -80,21 +61,7 @@ localStorage.setItem(sessionKey, sessionId);
 // Anti-spam - blokada wysyłania wiadomości podczas oczekiwania na odpowiedź
 let isWaitingForResponse = false;
 
-// Ukrywanie strzałki "ZAPYTAJ AI" po kliknięciu przycisku czatu lub strzałki
-const aboutArrow = document.getElementById('about-arrow');
-if (aboutArrow) {
-  aboutArrow.addEventListener('click', () => {
-    aboutArrow.style.display = 'none';
-  });
-}
-
-openBtn.addEventListener('click', () => {
-  widget.classList.toggle('hidden');
-  if (!widget.classList.contains('hidden')) {
-    callout.classList.remove('callout--visible');
-    if (aboutArrow) aboutArrow.style.display = 'none';
-  }
-});
+// Stary kod dla openBtn i widget usunięty - te elementy nie istnieją
 
 function addMessage(text, type) {
   const div = document.createElement('div');
