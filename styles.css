@@ -573,7 +573,7 @@ body::before {
     color: black !important;
     margin-left: auto !important;
     margin-right: 0 !important;
-    text-align: right !important;
+    text-align: left !important;
     box-shadow: none !important;
     border-radius: 20px 20px 4px 20px !important;
     padding: 16px 20px !important;
