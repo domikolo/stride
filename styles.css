@@ -607,13 +607,13 @@ body::before {
 }
 
 .assistant-message {
-    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(0,184,230,0.05)) !important;
+    background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(0,184,230,0.03)) !important;
     color: rgba(255, 255, 255, 0.9) !important;
     margin-right: auto !important;
     margin-left: 0 !important;
     text-align: left !important;
-    border: 1px solid rgba(0,212,255,0.4) !important;
-    box-shadow: 0 8px 24px rgba(0,212,255,0.2), 0 0 12px rgba(0,212,255,0.1) !important;
+    border: 1px solid rgba(0,212,255,0.25) !important;
+    box-shadow: 0 4px 16px rgba(0,212,255,0.12), 0 0 8px rgba(0,212,255,0.06) !important;
     border-radius: 20px 20px 20px 4px !important;
     padding: 16px 20px !important;
     margin-top: 12px !important;
@@ -1440,6 +1440,100 @@ body::before {
     color: black;
     transform: scale(1.1);
     box-shadow: 0 0 20px rgba(0,212,255,0.4);
+}
+
+/* Micro-interactions */
+.chat-container.neon-float .send-btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+.message-input:valid {
+    border-color: #10b981;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1);
+}
+
+.message-input:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1);
+}
+
+/* Button press feedback */
+.book-btn:active,
+.start-chat-btn:active {
+    transform: scale(0.98) translateY(1px);
+    transition: transform 0.1s ease;
+}
+
+/* Enhanced focus states */
+.form-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+/* Loading button state */
+.book-btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.book-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Success animation */
+.success-checkmark {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #10b981;
+    position: relative;
+    margin-right: 8px;
+    animation: successPulse 0.6s ease-out;
+}
+
+.success-checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .header-green-bar-svg {
