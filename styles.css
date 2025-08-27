@@ -63,7 +63,7 @@ body::before {
 /* Profesjonalny design */
 .hero-container {
   position: fixed;
-  top: 50%;
+  top: 45%;
     left: 30%;
     transform: translate(-50%, -50%);
     z-index: 10;
@@ -109,12 +109,13 @@ body::before {
 }
 
 .hero-title {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .title-line {
     margin: 0;
-    line-height: 1.1;
+    line-height: 0.95;
+    margin-bottom: -8px;
 }
 
 .title-word {
@@ -156,7 +157,7 @@ body::before {
 }
 
 .hero-subtitle {
-    margin-bottom: 48px;
+    margin-bottom: 32px;
     max-width: 600px;
 }
 
@@ -252,7 +253,7 @@ body::before {
     display: flex;
     gap: 60px;
     justify-content: flex-start;
-    margin-top: 60px;
+    margin-top: 32px;
 }
 
 .metric {
@@ -283,10 +284,11 @@ body::before {
 }
 
 .metric-label {
-    font-size: 0.9rem;
-    color: #b0b0b0;
+    font-size: 1rem;
+    color: #d0d0d0;
     font-weight: 500;
     line-height: 1.4;
+    margin-top: 4px;
 }
 
 /* Hero Content */
