@@ -511,6 +511,13 @@ function formatDate(date) {
 
 function selectDate(dateStr) {
   console.log('selectDate called with:', dateStr);
+  
+  // Jeśli data już została wybrana, zablokuj możliwość zmiany
+  if (appointmentState.selectedDate) {
+    console.log('Date already selected, ignoring click');
+    return;
+  }
+  
   const dateElement = document.querySelector(`[data-date="${dateStr}"]`);
   console.log('Found date element:', dateElement);
   
@@ -527,6 +534,15 @@ function selectDate(dateStr) {
     
     // Add selection to clicked date
     dateElement.classList.add('selected');
+    
+    // Disable all other dates
+    document.querySelectorAll('.mini-calendar-day.available').forEach(el => {
+      if (el !== dateElement) {
+        el.classList.remove('available');
+        el.classList.add('disabled');
+        el.removeAttribute('onclick');
+      }
+    });
     
     // FIXED: Use the dateStr directly (it's already in correct format from createCalendarDays)
     appointmentState.selectedDate = dateStr;
@@ -597,6 +613,12 @@ function showTimeSlots(dateStr) {
 }
 
 function selectTime(timeStr) {
+  // Jeśli godzina już została wybrana, zablokuj możliwość zmiany
+  if (appointmentState.selectedTime) {
+    console.log('Time already selected, ignoring click');
+    return;
+  }
+  
   // Remove previous selection
   document.querySelectorAll('.time-slot.selected').forEach(el => {
     el.classList.remove('selected');
@@ -606,6 +628,15 @@ function selectTime(timeStr) {
   const timeElement = document.querySelector(`[data-time="${timeStr}"]`);
   if (timeElement) {
     timeElement.classList.add('selected');
+    
+    // Disable all other time slots
+    document.querySelectorAll('.time-slot.available').forEach(el => {
+      if (el !== timeElement) {
+        el.classList.remove('available');
+        el.classList.add('disabled');
+        el.removeAttribute('onclick');
+      }
+    });
   }
   
   appointmentState.selectedTime = timeStr;
@@ -723,6 +754,12 @@ async function sendBookingRequest(query) {
 function selectRealDate(dateStr) {
   console.log('selectRealDate called with:', dateStr);
   
+  // Jeśli data już została wybrana, zablokuj możliwość zmiany
+  if (appointmentState.selectedDate) {
+    console.log('Date already selected, ignoring click');
+    return;
+  }
+  
   const dateElement = document.querySelector(`[data-date="${dateStr}"]`);
   if (dateElement && !dateElement.classList.contains('disabled')) {
     // Remove previous selection
@@ -732,6 +769,15 @@ function selectRealDate(dateStr) {
     
     // Add selection to clicked date
     dateElement.classList.add('selected');
+    
+    // Disable all other dates
+    document.querySelectorAll('.mini-calendar-day.available').forEach(el => {
+      if (el !== dateElement) {
+        el.classList.remove('available');
+        el.classList.add('disabled');
+        el.removeAttribute('onclick');
+      }
+    });
     
     appointmentState.selectedDate = dateStr;
     appointmentState.currentStep = 'selecting_time';
@@ -797,6 +843,12 @@ function showRealTimeSlots(dateStr) {
 }
 
 function selectRealTime(timeStr) {
+  // Jeśli godzina już została wybrana, zablokuj możliwość zmiany
+  if (appointmentState.selectedTime) {
+    console.log('Time already selected, ignoring click');
+    return;
+  }
+  
   // Remove previous selection
   document.querySelectorAll('.time-slot.selected').forEach(el => {
     el.classList.remove('selected');
@@ -806,6 +858,15 @@ function selectRealTime(timeStr) {
   const timeElement = document.querySelector(`[data-time="${timeStr}"]`);
   if (timeElement) {
     timeElement.classList.add('selected');
+    
+    // Disable all other time slots
+    document.querySelectorAll('.time-slot.available').forEach(el => {
+      if (el !== timeElement) {
+        el.classList.remove('available');
+        el.classList.add('disabled');
+        el.removeAttribute('onclick');
+      }
+    });
   }
   
   appointmentState.selectedTime = timeStr;
