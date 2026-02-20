@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stride Services — AI Chatboty dla Firm</title>
+  <meta name="description" content="Spersonalizowane chatboty AI dla firm usługowych">
+  <link rel="icon" href="favicon.ico">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #09090b;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Landing ─────────────────────────────── */
+
+    .landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+    }
+
+    .glow {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .landing-content { position: relative; text-align: center; max-width: 600px; }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #60a5fa;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 .gradient {
+      background: linear-gradient(to right, #fff, #a1a1aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h1 .dim { color: #52525b; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #a1a1aa;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary { background: #2563eb; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+    /* ── Chat widget ─────────────────────────── */
+
+    .chat-fab {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #2563eb;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 24px rgba(37,99,235,0.25);
+      transition: transform 0.2s;
+      color: #fff;
+    }
+    .chat-fab:hover { transform: scale(1.05); }
+    .chat-fab svg { width: 24px; height: 24px; }
+
+    .chat-window {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      width: 380px;
+      height: 520px;
+      background: #18181b;
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-window.open { display: flex; }
+
+    @media (max-width: 440px) {
+      .chat-window {
+        width: calc(100vw - 1rem);
+        height: calc(100vh - 2rem);
+        bottom: 0.5rem;
+        right: 0.5rem;
+        border-radius: 0.75rem;
+      }
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .chat-header-left { display: flex; align-items: center; gap: 0.5rem; }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .chat-header-title { font-size: 0.875rem; font-weight: 500; }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #71717a;
+      cursor: pointer;
+      padding: 0.25rem;
+      transition: color 0.2s;
+    }
+    .chat-close:hover { color: #fff; }
+    .chat-close svg { width: 20px; height: 20px; }
+
+    .takeover-banner {
+      padding: 0.5rem 1rem;
+      background: rgba(37,99,235,0.08);
+      border-bottom: 1px solid rgba(59,130,246,0.15);
+      font-size: 0.75rem;
+      color: #60a5fa;
+      text-align: center;
+      display: none;
+    }
+    .takeover-banner.visible { display: block; }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .chat-empty {
+      text-align: center;
+      color: #71717a;
+      font-size: 0.875rem;
+      padding: 3rem 0;
+    }
+
+    .msg { display: flex; }
+    .msg.user { justify-content: flex-end; }
+    .msg.bot { justify-content: flex-start; }
+
+    .msg-bubble {
+      max-width: 80%;
+      padding: 0.625rem 0.875rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .msg.user .msg-bubble {
+      background: #2563eb;
+      color: #fff;
+      border-bottom-right-radius: 0.25rem;
+    }
+
+    .msg.bot .msg-bubble {
+      background: rgba(255,255,255,0.04);
+      color: #d4d4d8;
+      border-bottom-left-radius: 0.25rem;
+    }
+
+    .msg.agent .msg-bubble {
+      background: rgba(59,130,246,0.08);
+      color: #e4e4e7;
+      border: 1px solid rgba(59,130,246,0.15);
+      border-bottom-left-radius: 0.25rem;
+    }
+
+    .msg-agent-label {
+      font-size: 0.625rem;
+      color: #60a5fa;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .msg-typing {
+      color: #71717a;
+      font-size: 0.875rem;
+      padding: 0.625rem 0.875rem;
+      background: rgba(255,255,255,0.04);
+      border-radius: 0.75rem;
+      border-bottom-left-radius: 0.25rem;
+      display: inline-block;
+    }
+
+    /* Markdown inside bubbles */
+    .msg-bubble p { margin: 0.3em 0; }
+    .msg-bubble p:first-child { margin-top: 0; }
+    .msg-bubble p:last-child { margin-bottom: 0; }
+    .msg-bubble strong { font-weight: 600; color: #fff; }
+    .msg-bubble em { font-style: italic; }
+    .msg-bubble code {
+      background: rgba(255,255,255,0.08);
+      padding: 0.1em 0.35em;
+      border-radius: 0.25rem;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.8em;
+    }
+    .msg-bubble ul, .msg-bubble ol {
+      margin: 0.4em 0;
+      padding-left: 1.3em;
+    }
+    .msg-bubble li { margin: 0.15em 0; }
+    .msg-bubble li::marker { color: #52525b; }
+    .msg-bubble a { color: #60a5fa; text-decoration: underline; }
+
+    .chat-input-area {
+      padding: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .chat-input::placeholder { color: #52525b; }
+    .chat-input:focus { border-color: rgba(59,130,246,0.4); }
+
+    .chat-send {
+      background: #2563eb;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      cursor: pointer;
+      color: #fff;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+    }
+    .chat-send:hover { background: #1d4ed8; }
+    .chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+    .chat-send svg { width: 16px; height: 16px; }
+  </style>
+</head>
+<body>
+
+  <!-- Landing -->
+  <div class="landing">
+    <div class="glow"></div>
+    <div class="landing-content">
+      <div class="label">Stride Services</div>
+      <h1>
+        <span class="gradient">AI Chatboty</span><br>
+        <span class="dim">dla Twojej firmy</span>
+      </h1>
+      <p class="subtitle">
+        Spersonalizowane chatboty AI, które rozumieją Twoich klientów,
+        odpowiadają na pytania i umawiają spotkania — 24/7.
+      </p>
+      <div class="buttons">
+        <a href="mailto:jakub@stride-services.com" class="btn btn-primary">Kontakt</a>
+        <button class="btn btn-ghost" onclick="toggleChat()">Porozmawiaj z botem</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat FAB -->
+  <button class="chat-fab" id="chatFab" onclick="toggleChat()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"/>
+    </svg>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="status-dot"></div>
+        <span class="chat-header-title" id="chatTitle">Stride Assistant</span>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="takeover-banner" id="takeoverBanner">Rozmawiasz z konsultantem Stride</div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-empty">Cześć! Jak mogę Ci pomóc?</div>
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Napisz wiadomość..." autocomplete="off">
+      <button class="chat-send" id="chatSend" onclick="sendMessage()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ── Config ──────────────────────────────────
+    // CHATBOT_API will be empty string if not set — chat won't work but page loads fine
+    var CHATBOT_API = '';  // SET THIS: e.g. 'https://xxxxx.execute-api.eu-central-1.amazonaws.com/prod'
+
+    // ── State ───────────────────────────────────
+    var chatOpen = false;
+    var messages = [];
+    var loading = false;
+    var takenOver = false;
+    var lastSeenTs = 0;
+    var pollTimer = null;
+    var sessionId = sessionStorage.getItem('stride_sid');
+    if (!sessionId) {
+      sessionId = 'web-' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+      sessionStorage.setItem('stride_sid', sessionId);
+    }
+
+    // ── Elements ────────────────────────────────
+    var fab = document.getElementById('chatFab');
+    var win = document.getElementById('chatWindow');
+    var msgContainer = document.getElementById('chatMessages');
+    var input = document.getElementById('chatInput');
+    var sendBtn = document.getElementById('chatSend');
+    var banner = document.getElementById('takeoverBanner');
+    var title = document.getElementById('chatTitle');
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+
+    // ── Markdown ────────────────────────────────
+    function md(text) {
+      var lines = text.split('\n');
+      var html = '';
+      var inUl = false, inOl = false;
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var trimmed = line.trim();
+
+        // Bullet list
+        if (/^[-*]\s+/.test(trimmed)) {
+          if (!inUl) { if (inOl) { html += '</ol>'; inOl = false; } html += '<ul>'; inUl = true; }
+          html += '<li>' + inline(trimmed.replace(/^[-*]\s+/, '')) + '</li>';
+          continue;
+        }
+        // Numbered list
+        if (/^\d+\.\s+/.test(trimmed)) {
+          if (!inOl) { if (inUl) { html += '</ul>'; inUl = false; } html += '<ol>'; inOl = true; }
+          html += '<li>' + inline(trimmed.replace(/^\d+\.\s+/, '')) + '</li>';
+          continue;
+        }
+
+        if (inUl) { html += '</ul>'; inUl = false; }
+        if (inOl) { html += '</ol>'; inOl = false; }
+
+        if (!trimmed) { continue; }
+        html += '<p>' + inline(trimmed) + '</p>';
+      }
+
+      if (inUl) html += '</ul>';
+      if (inOl) html += '</ol>';
+      return html;
+    }
+
+    function inline(text) {
+      return text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`(.+?)`/g, '<code>$1</code>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    }
+
+    // ── Render ──────────────────────────────────
+    function render() {
+      if (messages.length === 0) {
+        msgContainer.innerHTML = '<div class="chat-empty">Cześć! Jak mogę Ci pomóc?</div>';
+      } else {
+        var html = '';
+        for (var i = 0; i < messages.length; i++) {
+          var m = messages[i];
+          var isAgent = m.sentBy && m.sentBy.indexOf('agent:') === 0;
+          var cls = m.role === 'user' ? 'user' : isAgent ? 'agent' : 'bot';
+          html += '<div class="msg ' + cls + '"><div class="msg-bubble">';
+          if (isAgent) html += '<div class="msg-agent-label">Konsultant</div>';
+          html += m.role === 'user' ? escapeHtml(m.text) : md(m.text);
+          html += '</div></div>';
+        }
+        if (loading) {
+          html += '<div class="msg bot"><div class="msg-typing">Pisanie...</div></div>';
+        }
+        msgContainer.innerHTML = html;
+      }
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+
+      // Takeover UI
+      banner.classList.toggle('visible', takenOver);
+      title.textContent = takenOver ? 'Rozmawiasz z konsultantem' : 'Stride Assistant';
+    }
+
+    function escapeHtml(t) {
+      return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Toggle ──────────────────────────────────
+    function toggleChat() {
+      chatOpen = !chatOpen;
+      win.classList.toggle('open', chatOpen);
+      fab.style.display = chatOpen ? 'none' : 'flex';
+      if (chatOpen) input.focus();
+    }
+
+    // ── Send ────────────────────────────────────
+    function sendMessage() {
+      var text = input.value.trim();
+      if (!text || !CHATBOT_API || loading) return;
+
+      input.value = '';
+      messages.push({ role: 'user', text: text });
+      loading = true;
+      render();
+
+      fetch(CHATBOT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: text, conversation_id: sessionId })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var body = typeof data.body === 'string' ? JSON.parse(data.body) : data;
+        loading = false;
+        if (body.taken_over) {
+          takenOver = true;
+          lastSeenTs = Math.floor(Date.now() / 1000);
+          startPoll();
+        } else if (body.answer) {
+          messages.push({ role: 'assistant', text: body.answer });
+        }
+        render();
+      })
+      .catch(function(e) {
+        console.error('Chat error:', e);
+        loading = false;
+        messages.push({ role: 'assistant', text: 'Przepraszam, wystąpił błąd. Spróbuj ponownie.' });
+        render();
+      });
+    }
+
+    // ── Poll (takeover) ─────────────────────────
+    function startPoll() {
+      if (pollTimer) return;
+      pollTimer = setInterval(function() {
+        fetch(CHATBOT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'poll', conversation_id: sessionId, last_seen_timestamp: lastSeenTs })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var body = typeof data.body === 'string' ? JSON.parse(data.body) : data;
+          if (body.messages && body.messages.length > 0) {
+            for (var i = 0; i < body.messages.length; i++) {
+              var m = body.messages[i];
+              messages.push({ role: 'assistant', text: m.text, sentBy: m.sent_by || '' });
+              if (m.timestamp && m.timestamp > lastSeenTs) lastSeenTs = m.timestamp;
+            }
+            render();
+          }
+          if (!body.taken_over) {
+            takenOver = false;
+            stopPoll();
+            render();
+          }
+        })
+        .catch(function(e) { console.error('Poll error:', e); });
+      }, 2500);
+    }
+
+    function stopPoll() {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+  </script>
+
+</body>
+</html>
