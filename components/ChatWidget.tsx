@@ -74,7 +74,49 @@ function RenderMarkdown({ text }: { text: string }) {
   type LT = 'ul' | 'ol';
   let listType: LT | null = null;
   let listItems: string[] = [];
+  let tableRows: string[][] = [];
+  let tableHasHeader = false;
   let key = 0;
+
+  const parseTableRow = (line: string): string[] =>
+    line.split('|').slice(1, -1).map(cell => cell.trim());
+
+  const isTabelSep = (line: string) => /^\|[\s\-:\|]+\|$/.test(line);
+  const isTableRow = (line: string) => line.startsWith('|') && line.endsWith('|');
+
+  const flushTable = () => {
+    if (!tableRows.length) return;
+    const headerRow = tableHasHeader ? tableRows[0] : null;
+    const bodyRows = tableHasHeader ? tableRows.slice(1) : tableRows;
+    elements.push(
+      <div key={key++} style={{ overflowX: 'auto', margin: '6px 0' }}>
+        <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
+          {headerRow && (
+            <thead>
+              <tr>
+                {headerRow.map((cell, i) => (
+                  <th key={i} style={{ padding: '5px 10px', textAlign: 'left', color: '#d4d4d8', fontWeight: 600, background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}
+                      dangerouslySetInnerHTML={{ __html: inlineMd(cell) }} />
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {bodyRows.map((row, ri) => (
+              <tr key={ri} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                {row.map((cell, ci) => (
+                  <td key={ci} style={{ padding: '5px 10px', color: '#a1a1aa' }}
+                      dangerouslySetInnerHTML={{ __html: inlineMd(cell) }} />
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+    tableRows = [];
+    tableHasHeader = false;
+  };
 
   const flushList = () => {
     if (!listType || !listItems.length) return;
@@ -92,6 +134,16 @@ function RenderMarkdown({ text }: { text: string }) {
 
   for (const line of lines) {
     const t = line.trim();
+
+    if (isTableRow(t)) {
+      if (isTabelSep(t)) { tableHasHeader = true; continue; }
+      flushList();
+      tableRows.push(parseTableRow(t));
+      continue;
+    }
+
+    if (tableRows.length) flushTable();
+
     if (/^[-*]\s+/.test(t)) {
       if (listType !== 'ul') { flushList(); listType = 'ul'; }
       listItems.push(t.replace(/^[-*]\s+/, '')); continue;
@@ -105,6 +157,7 @@ function RenderMarkdown({ text }: { text: string }) {
     elements.push(<p key={key++} dangerouslySetInnerHTML={{ __html: inlineMd(t) }} />);
   }
   flushList();
+  flushTable();
   return <>{elements}</>;
 }
 
@@ -335,6 +388,12 @@ export default function ChatWidget() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, phase]);
+
+  useEffect(() => {
+    if (!isTyping && phase === 'chat') {
+      inputRef.current?.focus();
+    }
+  }, [isTyping, phase]);
 
   // Takeover polling
   useEffect(() => {
