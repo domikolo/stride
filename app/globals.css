@@ -3,9 +3,7 @@
 @tailwind utilities;
 
 /* ── Base ─────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 html, body {
   margin: 0;
@@ -14,69 +12,79 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Chat Widget Animations ───────────────────────────── */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ── Chat Widget CSS Variables ────────────────────────── */
+:root {
+  --cw-right: 20px;
+  --cw-btn-width: 35px;
+  --cw-btn-height: 115px;
+  --cw-btn-radius: 20px;
+  /* laptop / small desktop */
+  --cw-width: 360px;
+  --cw-height: 500px;
+  --cw-widget-right: calc(var(--cw-right) + var(--cw-btn-width) + 5px);
 }
 
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(8px); }
-  to   { opacity: 1; transform: translateX(0); }
+/* desktop 1280px+ */
+@media (min-width: 1280px) {
+  :root {
+    --cw-width: 400px;
+    --cw-height: 540px;
+  }
 }
 
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
+/* wide 1600px+ */
+@media (min-width: 1600px) {
+  :root {
+    --cw-right: 28px;
+    --cw-width: 430px;
+    --cw-height: 580px;
+    --cw-widget-right: calc(var(--cw-right) + var(--cw-btn-width) + 6px);
+  }
 }
 
-@keyframes typing-dot {
-  0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-  40%            { transform: scale(1);   opacity: 1; }
+/* ── Widget GPU compositing ───────────────────────────── */
+#chat-widget-floating {
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, width, height;
+}
+#chat-widget-floating * {
+  backface-visibility: hidden;
 }
 
-.widget-msg-animate {
-  animation: fadeIn 0.25s ease-out forwards;
+/* ── Floating button ──────────────────────────────────── */
+#floating-chat-btn {
+  will-change: transform;
 }
 
-.widget-typing-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.5);
-  animation: typing-dot 1.2s infinite ease-in-out;
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  :root {
+    --cw-right: 8px;
+    --cw-btn-width: 40px;
+    --cw-btn-height: 70px;
+    --cw-btn-radius: 16px;
+  }
+  #chat-widget-floating {
+    right: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-width: 450px !important;
+    height: 70vh !important;
+    min-height: 400px !important;
+    max-height: 600px !important;
+  }
 }
-
-.widget-typing-dot:nth-child(2) { animation-delay: 0.15s; }
-.widget-typing-dot:nth-child(3) { animation-delay: 0.30s; }
 
 /* ── Scrollbar ─────────────────────────────────────────── */
-.widget-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-.widget-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-.widget-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.12);
-  border-radius: 2px;
-}
-.widget-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.2);
-}
+#chat-widget-floating ::-webkit-scrollbar { width: 4px; }
+#chat-widget-floating ::-webkit-scrollbar-track { background: transparent; }
+#chat-widget-floating ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
-/* ── Slot picker ───────────────────────────────────────── */
-.slot-btn {
-  transition: background 0.15s, transform 0.1s;
+/* ── Tada animation for button ────────────────────────── */
+@keyframes tada {
+  0%, 100% { transform: translateY(-50%) rotate(0deg); }
+  10%, 20% { transform: translateY(-50%) rotate(-3deg); }
+  30%, 50%, 70%, 90% { transform: translateY(-50%) rotate(3deg); }
+  40%, 60%, 80% { transform: translateY(-50%) rotate(-3deg); }
 }
-.slot-btn:hover {
-  background: rgba(37,99,235,0.35) !important;
-}
-.slot-btn:active {
-  transform: scale(0.96);
-}
-.slot-btn.selected {
-  background: #2563eb !important;
-  color: #fff !important;
-}
+#floating-chat-btn.tada { animation: tada 1s; }

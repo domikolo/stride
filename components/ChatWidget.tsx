@@ -22,12 +22,9 @@ interface SlotsByDay {
 const CHATBOT_API = process.env.NEXT_PUBLIC_CHATBOT_API || '';
 const POLL_INTERVAL = 2500;
 
-// Widget dimensions (matching admin panel)
-const BTN_WIDTH = 35;
-const BTN_HEIGHT = 115;
-const WIDGET_WIDTH = 420;
-const WIDGET_HEIGHT = 560;
-const WIDGET_RIGHT = 20;
+// Initial collapsed dimensions (same for all screen sizes)
+const BTN_WIDTH_PX  = 35;
+const BTN_HEIGHT_PX = 115;
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -381,8 +378,8 @@ export default function ChatWidget() {
     const widget = widgetRef.current;
     if (!widget) return;
 
-    widget.style.setProperty('height', `${BTN_HEIGHT}px`, 'important');
-    widget.style.setProperty('width', `${BTN_WIDTH}px`, 'important');
+    widget.style.setProperty('height', `${BTN_HEIGHT_PX}px`, 'important');
+    widget.style.setProperty('width', `${BTN_WIDTH_PX}px`, 'important');
     widget.style.setProperty('transform', 'translateY(-50%) translateX(40px)', 'important');
     widget.style.setProperty('transition', 'none', 'important');
     widget.style.setProperty('display', 'flex', 'important');
@@ -406,12 +403,12 @@ export default function ChatWidget() {
 
     scheduleTimer(() => {
       widget.style.setProperty('transition', 'width 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
-      widget.style.setProperty('width', `${WIDGET_WIDTH}px`, 'important');
+      widget.style.setProperty('width', 'var(--cw-width)', 'important');
     }, 260);
 
     scheduleTimer(() => {
       widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1), box-shadow 0.6s ease-out', 'important');
-      widget.style.setProperty('height', `${WIDGET_HEIGHT}px`, 'important');
+      widget.style.setProperty('height', 'var(--cw-height)', 'important');
       widget.style.setProperty('box-shadow', '0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)', 'important');
     }, 510);
 
@@ -446,7 +443,7 @@ export default function ChatWidget() {
     if (closeBtn) closeBtn.style.opacity = '0';
 
     widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1), box-shadow 0.4s ease-out', 'important');
-    widget.style.setProperty('height', `${BTN_HEIGHT}px`, 'important');
+    widget.style.setProperty('height', `${BTN_HEIGHT_PX}px`, 'important');
     widget.style.setProperty('box-shadow', 'none', 'important');
 
     scheduleTimer(() => {
@@ -456,7 +453,7 @@ export default function ChatWidget() {
 
     scheduleTimer(() => {
       widget.style.setProperty('transition', 'width 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
-      widget.style.setProperty('width', `${BTN_WIDTH}px`, 'important');
+      widget.style.setProperty('width', `${BTN_WIDTH_PX}px`, 'important');
     }, 500);
 
     scheduleTimer(() => {
@@ -571,13 +568,13 @@ export default function ChatWidget() {
         className="group fixed pointer-events-auto"
         style={{
           top: '50%',
-          right: `${WIDGET_RIGHT}px`,
+          right: 'var(--cw-right)',
           transform: 'translateY(-50%)',
-          width: `${BTN_WIDTH}px`,
-          height: `${BTN_HEIGHT}px`,
+          width: 'var(--cw-btn-width)',
+          height: 'var(--cw-btn-height)',
           background: '#111113',
           border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '20px',
+          borderRadius: 'var(--cw-btn-radius)',
           boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
           fontSize: 0,
           zIndex: 2003,
@@ -613,7 +610,7 @@ export default function ChatWidget() {
           display: 'none',
           position: 'fixed',
           top: '50%',
-          right: `${WIDGET_RIGHT + BTN_WIDTH + 5}px`,
+          right: 'var(--cw-widget-right)',
           transform: 'translateY(-50%)',
           background: '#111113',
           border: '1px solid rgba(255,255,255,0.06)',
@@ -770,30 +767,6 @@ export default function ChatWidget() {
         </button>
       </div>
 
-      <style jsx global>{`
-        #chat-widget-floating {
-          backface-visibility: hidden;
-          perspective: 1000px;
-        }
-        #chat-widget-floating * {
-          backface-visibility: hidden;
-        }
-        @media (max-width: 600px) {
-          #floating-chat-btn {
-            right: 8px !important;
-            width: 40px !important;
-            height: 70px !important;
-          }
-          #chat-widget-floating {
-            right: 8px !important;
-            width: calc(100vw - 16px) !important;
-            max-width: 450px !important;
-            height: 70vh !important;
-            min-height: 400px !important;
-            max-height: 600px !important;
-          }
-        }
-      `}</style>
     </>
   );
 }
