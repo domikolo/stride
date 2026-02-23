@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-type Phase = 'chat' | 'booking' | 'contact' | 'verifying' | 'confirmed' | 'takeover';
+type Phase = 'chat' | 'booking_confirm' | 'booking' | 'contact' | 'verifying' | 'confirmed' | 'takeover';
 
 interface Message {
   role: 'user' | 'bot' | 'agent';
@@ -640,11 +640,11 @@ export default function ChatWidget() {
       });
       const data = await res.json();
       if (data.taken_over) { setTakenOver(true); setPhase('takeover'); return; }
-      if (data.action_type === 'show_calendar' && data.available_slots?.length) {
-        addMessage('bot', data.answer || 'Wybierz dostępny termin:');
+      if (data.action_type === 'show_booking_button' && data.available_slots?.length) {
+        addMessage('bot', data.answer || '');
         setSlots(data.available_slots);
         setSelectedSlot(null);
-        setPhase('booking');
+        setPhase('booking_confirm');
       } else {
         addMessage('bot', data.answer || '');
       }
@@ -710,6 +710,7 @@ export default function ChatWidget() {
   };
 
   const showInput = phase === 'chat' || phase === 'takeover';
+  const showBookingBtn = phase === 'booking_confirm';
 
   return (
     <>
@@ -863,6 +864,35 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
         </div>
+
+        {/* Booking confirm footer */}
+        {showBookingBtn && (
+          <div
+            className="widget-footer p-4 transition-opacity duration-300"
+            style={{ background: '#09090b', borderTop: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPhase('booking')}
+                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white transition-all duration-200"
+                style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.35)' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#3b82f6'; e.currentTarget.style.borderColor = '#3b82f6'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.2)'; e.currentTarget.style.borderColor = 'rgba(59,130,246,0.35)'; }}
+              >
+                Umów spotkanie
+              </button>
+              <button
+                onClick={() => setPhase('chat')}
+                className="px-4 py-2.5 rounded-xl text-sm text-zinc-500 transition-all duration-200"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#a1a1aa'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#71717a'; }}
+              >
+                Może później
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         {showInput && (
