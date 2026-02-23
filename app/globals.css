@@ -18,17 +18,17 @@ html, body {
   --cw-btn-width: 35px;
   --cw-btn-height: 115px;
   --cw-btn-radius: 20px;
-  /* laptop / small desktop */
-  --cw-width: 360px;
-  --cw-height: 500px;
+  /* laptop */
+  --cw-width: 320px;
+  --cw-height: 440px;
   --cw-widget-right: calc(var(--cw-right) + var(--cw-btn-width) + 5px);
 }
 
 /* desktop 1280px+ */
 @media (min-width: 1280px) {
   :root {
-    --cw-width: 400px;
-    --cw-height: 540px;
+    --cw-width: 355px;
+    --cw-height: 480px;
   }
 }
 
@@ -36,8 +36,8 @@ html, body {
 @media (min-width: 1600px) {
   :root {
     --cw-right: 28px;
-    --cw-width: 430px;
-    --cw-height: 580px;
+    --cw-width: 385px;
+    --cw-height: 515px;
     --cw-widget-right: calc(var(--cw-right) + var(--cw-btn-width) + 6px);
   }
 }

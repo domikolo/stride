@@ -396,18 +396,21 @@ export default function ChatWidget() {
 
     void widget.offsetWidth;
 
+    // Step 1: slide in from right (250ms)
     scheduleTimer(() => {
       widget.style.setProperty('transition', 'transform 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
       widget.style.setProperty('transform', 'translateY(-50%) translateX(0)', 'important');
     }, 10);
 
+    // Step 2: expand width — keep transform in transition so it doesn't snap
     scheduleTimer(() => {
-      widget.style.setProperty('transition', 'width 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
+      widget.style.setProperty('transition', 'width 0.5s cubic-bezier(0.77,0,0.18,1), transform 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
       widget.style.setProperty('width', 'var(--cw-width)', 'important');
     }, 260);
 
+    // Step 3: expand height — keep width in transition so it doesn't snap
     scheduleTimer(() => {
-      widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1), box-shadow 0.6s ease-out', 'important');
+      widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1), width 0.5s cubic-bezier(0.77,0,0.18,1), box-shadow 0.6s ease-out', 'important');
       widget.style.setProperty('height', 'var(--cw-height)', 'important');
       widget.style.setProperty('box-shadow', '0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)', 'important');
     }, 510);
@@ -442,17 +445,20 @@ export default function ChatWidget() {
     if (footer) footer.style.opacity = '0';
     if (closeBtn) closeBtn.style.opacity = '0';
 
+    // Step 1: collapse height + fade shadow
     widget.style.setProperty('transition', 'height 0.5s cubic-bezier(0.77,0,0.18,1), box-shadow 0.4s ease-out', 'important');
     widget.style.setProperty('height', `${BTN_HEIGHT_PX}px`, 'important');
     widget.style.setProperty('box-shadow', 'none', 'important');
 
+    // Step 2: slide out — keep height in transition
     scheduleTimer(() => {
-      widget.style.setProperty('transition', 'transform 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
+      widget.style.setProperty('transition', 'transform 0.5s cubic-bezier(0.77,0,0.18,1), height 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
       widget.style.setProperty('transform', 'translateY(-50%) translateX(40px)', 'important');
     }, 250);
 
+    // Step 3: collapse width — keep transform in transition
     scheduleTimer(() => {
-      widget.style.setProperty('transition', 'width 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
+      widget.style.setProperty('transition', 'width 0.5s cubic-bezier(0.77,0,0.18,1), transform 0.5s cubic-bezier(0.77,0,0.18,1)', 'important');
       widget.style.setProperty('width', `${BTN_WIDTH_PX}px`, 'important');
     }, 500);
 
