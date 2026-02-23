@@ -161,37 +161,124 @@ function RenderMarkdown({ text }: { text: string }) {
   return <>{elements}</>;
 }
 
-// ── SlotPicker ─────────────────────────────────────────────────────────────
+// ── CalendarPicker ──────────────────────────────────────────────────────────
 
-function SlotPicker({ slots, selected, onSelect }: {
+const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+const DAY_PL   = ['Pn','Wt','Śr','Cz','Pt','So','Nd'];
+
+function CalendarPicker({ slots, onSelect }: {
   slots: string[];
-  selected: string | null;
   onSelect: (s: string) => void;
 }) {
-  const grouped = groupSlotsByDay(slots);
+  const slotsByDay = groupSlotsByDay(slots);
+  const availableDates = new Set(Object.keys(slotsByDay));
+
+  const firstAvailable = slots[0] ? new Date(slots[0].split('T')[0] + 'T00:00:00') : new Date();
+  const [month, setMonth] = useState(new Date(firstAvailable.getFullYear(), firstAvailable.getMonth(), 1));
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+
+  const year  = month.getFullYear();
+  const mon   = month.getMonth();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const dateKey = (d: number) => `${year}-${pad(mon + 1)}-${pad(d)}`;
+
+  // cells: null = padding, number = day
+  const firstDow = new Date(year, mon, 1).getDay();
+  const startPad = firstDow === 0 ? 6 : firstDow - 1;
+  const daysInMonth = new Date(year, mon + 1, 0).getDate();
+  const cells: (number | null)[] = [
+    ...Array(startPad).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const canPrev = new Date(year, mon - 1, 1) >= new Date(today.getFullYear(), today.getMonth(), 1);
+
   return (
-    <div className="space-y-3">
-      {Object.keys(grouped).sort().map(day => (
-        <div key={day}>
-          <p className="text-xs text-zinc-500 mb-1.5 capitalize">{formatDate(day)}</p>
+    <div>
+      {/* Month nav */}
+      <div className="flex items-center justify-between mb-3">
+        <button
+          onClick={() => { setMonth(new Date(year, mon - 1, 1)); setSelectedDay(null); }}
+          disabled={!canPrev}
+          className="w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 disabled:opacity-20"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#a1a1aa' }}
+        >‹</button>
+        <span className="text-xs font-medium text-zinc-300">{MONTH_PL[mon]} {year}</span>
+        <button
+          onClick={() => { setMonth(new Date(year, mon + 1, 1)); setSelectedDay(null); }}
+          className="w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#a1a1aa' }}
+        >›</button>
+      </div>
+
+      {/* Day names */}
+      <div className="grid grid-cols-7 mb-1">
+        {DAY_PL.map(d => (
+          <div key={d} className="text-center text-[10px] text-zinc-600 py-0.5">{d}</div>
+        ))}
+      </div>
+
+      {/* Day cells */}
+      <div className="grid grid-cols-7 gap-0.5">
+        {cells.map((day, i) => {
+          if (!day) return <div key={i} />;
+          const key = dateKey(day);
+          const isAvailable = availableDates.has(key);
+          const isPast = new Date(year, mon, day) < today;
+          const isToday = new Date(year, mon, day).getTime() === today.getTime();
+          const isSelected = selectedDay === key;
+          const clickable = isAvailable && !isPast;
+
+          return (
+            <button
+              key={i}
+              onClick={() => clickable && setSelectedDay(key)}
+              disabled={!clickable}
+              className="relative flex flex-col items-center justify-center rounded-lg transition-all duration-150"
+              style={{
+                height: '32px',
+                fontSize: '12px',
+                background: isSelected ? 'rgba(59,130,246,0.3)' : isAvailable && !isPast ? 'rgba(255,255,255,0.04)' : 'transparent',
+                border: isSelected ? '1px solid rgba(59,130,246,0.6)' : isAvailable && !isPast ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
+                color: isSelected ? '#93c5fd' : isPast ? '#3f3f46' : isAvailable ? '#e4e4e7' : '#52525b',
+                cursor: clickable ? 'pointer' : 'default',
+                fontWeight: isToday ? 600 : 400,
+              }}
+            >
+              {day}
+              {isToday && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-blue-400 opacity-60" />}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Time slots for selected day */}
+      {selectedDay && slotsByDay[selectedDay] && (
+        <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <p className="text-[10px] text-zinc-600 mb-2 capitalize">{formatDate(selectedDay)} — wybierz godzinę:</p>
           <div className="flex flex-wrap gap-1.5">
-            {grouped[day].map(slot => (
+            {slotsByDay[selectedDay].map(slot => (
               <button
                 key={slot}
                 onClick={() => onSelect(slot)}
                 className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
                 style={{
-                  background: selected === slot ? 'rgba(59,130,246,0.25)' : 'rgba(255,255,255,0.04)',
-                  border: selected === slot ? '1px solid rgba(59,130,246,0.5)' : '1px solid rgba(255,255,255,0.08)',
-                  color: selected === slot ? '#93c5fd' : 'rgba(255,255,255,0.7)',
+                  background: 'rgba(59,130,246,0.15)',
+                  border: '1px solid rgba(59,130,246,0.3)',
+                  color: '#93c5fd',
                 }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.3)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.15)'; }}
               >
                 {formatTime(slot)}
               </button>
             ))}
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
@@ -748,10 +835,10 @@ export default function ChatWidget() {
               </div>
             )}
 
-            {/* Slot picker */}
+            {/* Calendar picker */}
             {phase === 'booking' && slots.length > 0 && (
               <div className="rounded-xl p-3" style={{ background: '#1a1a1e', border: '1px solid rgba(255,255,255,0.04)' }}>
-                <SlotPicker slots={slots} selected={selectedSlot} onSelect={s => { setSelectedSlot(s); setPhase('contact'); }} />
+                <CalendarPicker slots={slots} onSelect={s => { setSelectedSlot(s); setPhase('contact'); }} />
               </div>
             )}
 
