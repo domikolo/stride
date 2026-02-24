@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
 type Phase = 'chat' | 'booking_confirm' | 'booking' | 'contact' | 'verifying' | 'confirmed' | 'takeover';
+type RatingState = 'hidden' | 'visible' | 'rated' | 'dismissed';
 
 interface Message {
   role: 'user' | 'bot' | 'agent';
@@ -23,7 +24,7 @@ const CHATBOT_API = process.env.NEXT_PUBLIC_CHATBOT_API || '';
 const POLL_INTERVAL = 2500;
 
 // Initial collapsed dimensions (same for all screen sizes)
-const BTN_WIDTH_PX  = 35;
+const BTN_WIDTH_PX = 35;
 const BTN_HEIGHT_PX = 115;
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -96,7 +97,7 @@ function RenderMarkdown({ text }: { text: string }) {
               <tr>
                 {headerRow.map((cell, i) => (
                   <th key={i} style={{ padding: '5px 10px', textAlign: 'left', color: '#d4d4d8', fontWeight: 600, background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}
-                      dangerouslySetInnerHTML={{ __html: inlineMd(cell) }} />
+                    dangerouslySetInnerHTML={{ __html: inlineMd(cell) }} />
                 ))}
               </tr>
             </thead>
@@ -106,7 +107,7 @@ function RenderMarkdown({ text }: { text: string }) {
               <tr key={ri} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 {row.map((cell, ci) => (
                   <td key={ci} style={{ padding: '5px 10px', color: '#a1a1aa' }}
-                      dangerouslySetInnerHTML={{ __html: inlineMd(cell) }} />
+                    dangerouslySetInnerHTML={{ __html: inlineMd(cell) }} />
                 ))}
               </tr>
             ))}
@@ -161,10 +162,128 @@ function RenderMarkdown({ text }: { text: string }) {
   return <>{elements}</>;
 }
 
+// ── RatingBanner ───────────────────────────────────────────────────────────
+
+const RATING_TIMEOUT = 10; // seconds
+
+function RatingBanner({ onRate, onDismiss }: {
+  onRate: (positive: boolean) => void;
+  onDismiss: () => void;
+}) {
+  const [progress, setProgress] = useState(100);
+  const [voted, setVoted] = useState<boolean | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startedAt = useRef(Date.now());
+
+  useEffect(() => {
+    const tick = () => {
+      const elapsed = (Date.now() - startedAt.current) / 1000;
+      const remaining = Math.max(0, 1 - elapsed / RATING_TIMEOUT);
+      setProgress(remaining * 100);
+      if (remaining === 0) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        onDismiss();
+      }
+    };
+    intervalRef.current = setInterval(tick, 50);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [onDismiss]);
+
+  const handleRate = (positive: boolean) => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setVoted(positive);
+    setTimeout(() => onRate(positive), 700);
+  };
+
+  return (
+    <div
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        padding: '10px 14px 0',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Content row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+        {/* Left: label */}
+        <span style={{ fontSize: '11px', color: '#71717a', letterSpacing: '0.01em' }}>
+          {voted === null ? 'Jak oceniasz tę rozmowę?' : voted ? '✓ Dzięki za ocenę!' : '✓ Dzięki za feedback!'}
+        </span>
+
+        {/* Right: thumbs + X */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {voted === null && (
+            <>
+              {/* Thumbs up */}
+              <button
+                onClick={() => handleRate(true)}
+                title="Dobra rozmowa"
+                style={{
+                  width: '30px', height: '30px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.07)',
+                  background: 'rgba(255,255,255,0.04)', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', fontSize: '14px', transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,197,94,0.15)'; e.currentTarget.style.borderColor = 'rgba(34,197,94,0.35)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
+              >👍</button>
+
+              {/* Thumbs down */}
+              <button
+                onClick={() => handleRate(false)}
+                title="Słaba rozmowa"
+                style={{
+                  width: '30px', height: '30px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.07)',
+                  background: 'rgba(255,255,255,0.04)', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', fontSize: '14px', transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.35)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
+              >👎</button>
+            </>
+          )}
+
+          {/* Dismiss X */}
+          {voted === null && (
+            <button
+              onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); onDismiss(); }}
+              title="Zamknij"
+              style={{
+                width: '22px', height: '22px', borderRadius: '6px', border: 'none',
+                background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', color: '#52525b', transition: 'color 0.15s ease', padding: 0,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#a1a1aa'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#52525b'; }}
+            >
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Countdown progress bar */}
+      <div style={{ height: '2px', background: 'rgba(255,255,255,0.05)', marginLeft: '-14px', marginRight: '-14px' }}>
+        <div
+          style={{
+            height: '100%',
+            width: `${progress}%`,
+            background: 'linear-gradient(90deg, rgba(99,102,241,0.5), rgba(139,92,246,0.5))',
+            transition: 'width 0.05s linear',
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 // ── CalendarPicker ──────────────────────────────────────────────────────────
 
-const MONTH_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
-const DAY_PL   = ['Pn','Wt','Śr','Cz','Pt','So','Nd'];
+const MONTH_PL = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+const DAY_PL = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'];
 
 function CalendarPicker({ slots, onSelect }: {
   slots: string[];
@@ -177,9 +296,9 @@ function CalendarPicker({ slots, onSelect }: {
   const [month, setMonth] = useState(new Date(firstAvailable.getFullYear(), firstAvailable.getMonth(), 1));
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
-  const year  = month.getFullYear();
-  const mon   = month.getMonth();
-  const today = new Date(); today.setHours(0,0,0,0);
+  const year = month.getFullYear();
+  const mon = month.getMonth();
+  const today = new Date(); today.setHours(0, 0, 0, 0);
 
   const pad = (n: number) => String(n).padStart(2, '0');
   const dateKey = (d: number) => `${year}-${pad(mon + 1)}-${pad(d)}`;
@@ -457,6 +576,8 @@ export default function ChatWidget() {
   const [contactInfo, setContactInfo] = useState('');
   const [takenOver, setTakenOver] = useState(false);
   const [lastSeenTs, setLastSeenTs] = useState(0);
+  const [ratingState, setRatingState] = useState<RatingState>('hidden');
+  const userMessageCount = useRef(0);
 
   const widgetRef = useRef<HTMLDivElement>(null);
   const animTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -623,8 +744,35 @@ export default function ChatWidget() {
     }, 1000);
   };
 
-  const addMessage = (role: Message['role'], text: string) =>
+  const handleDismissRating = useCallback(() => setRatingState('dismissed'), []);
+
+  const handleRate = useCallback(async (positive: boolean) => {
+    setRatingState('rated');
+    try {
+      await fetch(CHATBOT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'feedback',
+          conversation_id: sessionId.current,
+          rating: positive ? 'positive' : 'negative',
+        }),
+      });
+    } catch { /* ignore — best-effort */ }
+    // Auto-hide thank-you after 2s
+    setTimeout(() => setRatingState('dismissed'), 2000);
+  }, []);
+
+  const addMessage = (role: Message['role'], text: string) => {
     setMessages(prev => [...prev, { role, text, ts: Date.now() }]);
+    if (role === 'user') {
+      userMessageCount.current += 1;
+      // Show rating banner after 4th user message (only once per session)
+      if (userMessageCount.current === 4) {
+        setRatingState('visible');
+      }
+    }
+  };
 
   const sendMessage = async () => {
     const text = inputValue.trim();
@@ -793,6 +941,23 @@ export default function ChatWidget() {
         {takenOver && (
           <div className="px-4 py-2 text-xs text-blue-400 text-center" style={{ background: 'rgba(37,99,235,0.08)', borderBottom: '1px solid rgba(59,130,246,0.12)' }}>
             Rozmawiasz teraz z konsultantem Stride
+          </div>
+        )}
+
+        {/* Rating Banner — shown above messages area */}
+        {ratingState === 'visible' && (
+          <RatingBanner onRate={handleRate} onDismiss={handleDismissRating} />
+        )}
+        {ratingState === 'rated' && (
+          <div style={{
+            padding: '8px 14px 6px',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            background: 'rgba(255,255,255,0.03)',
+            textAlign: 'center',
+            fontSize: '11px',
+            color: '#71717a',
+          }}>
+            ✓ Dzięki za ocenę!
           </div>
         )}
 
