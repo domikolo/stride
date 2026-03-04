@@ -412,6 +412,7 @@ function ContactForm({ selectedSlot, onSubmit, onBack }: {
   const [value, setValue] = useState('');
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [error, setError] = useState('');
+  const [digits, setDigits] = useState('');
 
   const dateLabel = (() => {
     try {
@@ -421,15 +422,32 @@ function ContactForm({ selectedSlot, onSubmit, onBack }: {
     } catch { return selectedSlot; }
   })();
 
+  const formatDigits = (d: string) => {
+    const p = d.replace(/\D/g, '').slice(0, 9);
+    return p.replace(/(\d{3})(\d{1,3})?(\d{1,3})?/, (_, a, b, c) =>
+      [a, b, c].filter(Boolean).join(' ')
+    );
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, '').slice(0, 9);
+    setDigits(raw);
+    setValue('+48 ' + formatDigits(raw));
+    setError('');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (contactType === 'phone') {
+      if (digits.length !== 9) { setError('Wpisz 9-cyfrowy numer.'); return; }
+      setError('');
+      onSubmit(value, contactType);
+      return;
+    }
     const v = value.trim();
     if (!v) { setError('Podaj e-mail lub telefon.'); return; }
-    if (contactType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
       setError('Nieprawidłowy e-mail.'); return;
-    }
-    if (contactType === 'phone' && !/^[\d\s\+\-\(\)]{7,}$/.test(v)) {
-      setError('Nieprawidłowy numer.'); return;
     }
     setError('');
     onSubmit(v, contactType);
@@ -448,7 +466,7 @@ function ContactForm({ selectedSlot, onSubmit, onBack }: {
             <button
               key={t}
               type="button"
-              onClick={() => { setContactType(t); setValue(''); setError(''); }}
+              onClick={() => { setContactType(t); setValue(''); setDigits(''); setError(''); }}
               className="flex-1 py-1.5 rounded-lg text-xs transition-all duration-150"
               style={{
                 background: contactType === t ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.04)',
@@ -461,22 +479,41 @@ function ContactForm({ selectedSlot, onSubmit, onBack }: {
           ))}
         </div>
 
-        <input
-          type={contactType === 'email' ? 'email' : 'tel'}
-          value={value}
-          onChange={e => { setValue(e.target.value); setError(''); }}
-          placeholder={contactType === 'email' ? 'twoj@email.pl' : '+48 123 456 789'}
-          autoFocus
-          className="w-full outline-none text-sm text-white placeholder-zinc-600"
-          style={{
-            padding: '10px 14px',
-            border: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: '10px',
-            background: '#1a1a1e',
-          }}
-          onFocus={e => { e.target.style.borderColor = 'rgba(59,130,246,0.3)'; }}
-          onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.06)'; }}
-        />
+        {contactType === 'phone' ? (
+          <div style={{ display: 'flex', gap: 0, border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', overflow: 'hidden', background: '#1a1a1e' }}>
+            <span style={{ padding: '10px 12px', background: '#1a1a1e', color: '#71717a', fontSize: '14px', borderRight: '1px solid rgba(255,255,255,0.06)', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>+48</span>
+            <input
+              type="tel"
+              inputMode="numeric"
+              value={formatDigits(digits)}
+              onChange={handlePhoneChange}
+              placeholder="834 234 543"
+              maxLength={11}
+              autoFocus
+              className="outline-none text-sm text-white placeholder-zinc-600"
+              style={{ flex: 1, padding: '10px 14px', background: '#1a1a1e' }}
+              onFocus={e => { (e.target.closest('div') as HTMLElement).style.borderColor = 'rgba(59,130,246,0.3)'; }}
+              onBlur={e => { (e.target.closest('div') as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)'; }}
+            />
+          </div>
+        ) : (
+          <input
+            type="email"
+            value={value}
+            onChange={e => { setValue(e.target.value); setError(''); }}
+            placeholder="twoj@email.pl"
+            autoFocus
+            className="w-full outline-none text-sm text-white placeholder-zinc-600"
+            style={{
+              padding: '10px 14px',
+              border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: '10px',
+              background: '#1a1a1e',
+            }}
+            onFocus={e => { e.target.style.borderColor = 'rgba(59,130,246,0.3)'; }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.06)'; }}
+          />
+        )}
         {error && <p className="text-xs text-red-400">{error}</p>}
         <p className="text-xs text-zinc-700">Wyślemy kod potwierdzający.</p>
 
