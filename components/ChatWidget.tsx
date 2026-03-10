@@ -543,12 +543,20 @@ function ContactForm({ selectedSlot, onSubmit, onBack }: {
 
 // ── VerifyForm ─────────────────────────────────────────────────────────────
 
-function VerifyForm({ contactInfo, onSubmit }: {
+function VerifyForm({ contactInfo, onSubmit, onResend }: {
   contactInfo: string;
   onSubmit: (code: string) => void;
+  onResend: () => void;
 }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -556,6 +564,11 @@ function VerifyForm({ contactInfo, onSubmit }: {
     if (!/^\d{6}$/.test(v)) { setError('Podaj 6-cyfrowy kod.'); return; }
     setError('');
     onSubmit(v);
+  };
+
+  const handleResendClick = () => {
+    onResend();
+    setCooldown(30);
   };
 
   return (
@@ -594,6 +607,16 @@ function VerifyForm({ contactInfo, onSubmit }: {
           Potwierdź
         </button>
       </form>
+      <p className="text-center">
+        <button
+          onClick={handleResendClick}
+          disabled={cooldown > 0}
+          className="text-xs transition-colors"
+          style={{ color: cooldown > 0 ? '#52525b' : '#60a5fa' }}
+        >
+          {cooldown > 0 ? `Wyślij ponownie (${cooldown}s)` : 'Wyślij ponownie'}
+        </button>
+      </p>
     </div>
   );
 }
@@ -611,6 +634,7 @@ export default function ChatWidget() {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [appointmentId, setAppointmentId] = useState<string | null>(null);
   const [contactInfo, setContactInfo] = useState('');
+  const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [takenOver, setTakenOver] = useState(false);
   const [lastSeenTs, setLastSeenTs] = useState(0);
   const [ratingState, setRatingState] = useState<RatingState>('hidden');
@@ -843,6 +867,7 @@ export default function ChatWidget() {
   const handleContactSubmit = async (info: string, type: 'email' | 'phone') => {
     if (!selectedSlot) return;
     setContactInfo(info);
+    setContactType(type);
     setIsTyping(true);
     try {
       const res = await fetch(CHATBOT_API, {
@@ -888,6 +913,31 @@ export default function ChatWidget() {
         setTimeout(() => setPhase('chat'), 4000);
       } else {
         addMessage('bot', data.answer || '❌ Nieprawidłowy kod.');
+      }
+    } catch {
+      addMessage('bot', 'Błąd połączenia.');
+    } finally { setIsTyping(false); }
+  };
+
+  const handleResend = async () => {
+    if (!selectedSlot) return;
+    setIsTyping(true);
+    try {
+      const res = await fetch(CHATBOT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'book_appointment',
+          session_id: sessionId.current,
+          data: { datetime: selectedSlot, contact_info: contactInfo, contact_type: contactType },
+        }),
+      });
+      const data = await res.json();
+      if (data.action_type === 'request_verification') {
+        setAppointmentId(data.appointment_id);
+        addMessage('bot', `Nowy kod wysłany na ${contactInfo}.`);
+      } else {
+        addMessage('bot', data.answer || 'Nie udało się wysłać kodu.');
       }
     } catch {
       addMessage('bot', 'Błąd połączenia.');
@@ -1052,7 +1102,7 @@ export default function ChatWidget() {
 
             {/* Verify form */}
             {phase === 'verifying' && (
-              <VerifyForm contactInfo={contactInfo} onSubmit={handleVerify} />
+              <VerifyForm contactInfo={contactInfo} onSubmit={handleVerify} onResend={handleResend} />
             )}
 
             {/* Confirmed */}
