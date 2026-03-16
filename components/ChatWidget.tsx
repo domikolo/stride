@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-type Phase = 'chat' | 'booking_confirm' | 'booking' | 'contact' | 'verifying' | 'confirmed' | 'takeover';
+type Phase = 'chat' | 'booking_confirm' | 'booking' | 'contact' | 'verifying' | 'confirmed' | 'waiting_for_agent' | 'takeover';
 type RatingState = 'hidden' | 'visible' | 'rated' | 'dismissed';
 
 interface Message {
@@ -21,7 +21,8 @@ interface SlotsByDay {
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const CHATBOT_API = process.env.NEXT_PUBLIC_CHATBOT_API || '';
-const POLL_INTERVAL = 2500;
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || '';
+const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID || 'stride-services';
 
 // Initial collapsed dimensions (same for all screen sizes)
 const BTN_WIDTH_PX = 35;
@@ -636,22 +637,24 @@ export default function ChatWidget() {
   const [contactInfo, setContactInfo] = useState('');
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [takenOver, setTakenOver] = useState(false);
-  const [lastSeenTs, setLastSeenTs] = useState(0);
   const [ratingState, setRatingState] = useState<RatingState>('hidden');
   const userMessageCount = useRef(0);
 
   const widgetRef = useRef<HTMLDivElement>(null);
   const animTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const wsReconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionId = useRef('');
+  const phaseRef = useRef<Phase>('chat');
 
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
   useEffect(() => { sessionId.current = getSessionId(); }, []);
 
   useEffect(() => () => {
     animTimers.current.forEach(clearTimeout);
-    if (pollRef.current) clearInterval(pollRef.current);
+    wsDisconnect();
   }, []);
 
   useEffect(() => {
@@ -664,32 +667,64 @@ export default function ChatWidget() {
     }
   }, [isTyping, phase]);
 
-  // Takeover polling
-  useEffect(() => {
-    if (!takenOver) {
-      if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
-      return;
+  // ── WebSocket helpers ───────────────────────────────────────────
+
+  const wsDisconnect = useCallback(() => {
+    if (wsReconnectRef.current) { clearTimeout(wsReconnectRef.current); wsReconnectRef.current = null; }
+    if (wsRef.current) {
+      wsRef.current.onclose = null; // prevent reconnect loop
+      wsRef.current.close(1000);
+      wsRef.current = null;
     }
-    pollRef.current = setInterval(async () => {
+  }, []);
+
+  const wsConnect = useCallback(() => {
+    if (!WS_URL || !sessionId.current) return;
+    if (wsRef.current && wsRef.current.readyState <= WebSocket.OPEN) return;
+
+    const url = `${WS_URL}?session_id=${encodeURIComponent(sessionId.current)}&client_id=${encodeURIComponent(CLIENT_ID)}`;
+    const ws = new WebSocket(url);
+    wsRef.current = ws;
+
+    ws.onmessage = (e) => {
       try {
-        const res = await fetch(CHATBOT_API, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'poll', conversation_id: sessionId.current, last_seen_timestamp: lastSeenTs }),
-        });
-        const data = await res.json();
-        if (data.messages?.length) {
-          const newMsgs: Message[] = data.messages.map((m: { text: string; timestamp: number }) => ({
-            role: 'agent' as const, text: m.text, ts: m.timestamp,
-          }));
-          setMessages(prev => [...prev, ...newMsgs]);
-          setLastSeenTs(data.messages[data.messages.length - 1].timestamp);
+        const data = JSON.parse(e.data);
+        if (data.type === 'takeover_started') {
+          setTakenOver(true);
+          setPhase('takeover');
+        } else if (data.type === 'takeover_ended') {
+          setTakenOver(false);
+          setPhase('chat');
+          wsDisconnect();
+        } else if (data.type === 'new_message' && data.message) {
+          const m = data.message;
+          // Only show agent messages (sent_by starts with "agent:")
+          if (m.sentBy && m.sentBy.startsWith('agent:')) {
+            setMessages(prev => [...prev, { role: 'agent' as const, text: m.text, ts: m.timestamp }]);
+          }
         }
-        if (!data.taken_over) { setTakenOver(false); setPhase('chat'); }
-      } catch { /* ignore */ }
-    }, POLL_INTERVAL);
-    return () => { if (pollRef.current) clearInterval(pollRef.current); };
-  }, [takenOver, lastSeenTs]);
+      } catch { /* ignore malformed */ }
+    };
+
+    ws.onclose = (e) => {
+      wsRef.current = null;
+      // Reconnect if still in waiting/takeover phase (abnormal close)
+      if (e.code !== 1000 && (phaseRef.current === 'waiting_for_agent' || phaseRef.current === 'takeover')) {
+        wsReconnectRef.current = setTimeout(wsConnect, 3000);
+      }
+    };
+
+    ws.onerror = () => { ws.close(); };
+  }, [wsDisconnect]);
+
+  // Connect WS when entering waiting/takeover, disconnect when leaving
+  useEffect(() => {
+    if (phase === 'waiting_for_agent' || phase === 'takeover') {
+      wsConnect();
+    } else {
+      wsDisconnect();
+    }
+  }, [phase, wsConnect, wsDisconnect]);
 
   const scheduleTimer = (fn: () => void, ms: number) => {
     const id = setTimeout(fn, ms);
@@ -835,9 +870,14 @@ export default function ChatWidget() {
     }
   };
 
+  const cancelHumanRequest = useCallback(() => {
+    wsDisconnect();
+    setPhase('chat');
+  }, [wsDisconnect]);
+
   const sendMessage = async () => {
     const text = inputValue.trim();
-    if (!text || isTyping || takenOver) return;
+    if (!text || isTyping || takenOver || phase === 'waiting_for_agent') return;
     setInputValue('');
     addMessage('user', text);
     setIsTyping(true);
@@ -848,7 +888,13 @@ export default function ChatWidget() {
         body: JSON.stringify({ query: text, conversation_id: sessionId.current }),
       });
       const data = await res.json();
-      if (data.taken_over) { setTakenOver(true); setPhase('takeover'); return; }
+      if (data.taken_over) { setIsTyping(false); setTakenOver(true); setPhase('takeover'); return; }
+      if (data.human_requested) {
+        if (data.answer) addMessage('bot', data.answer);
+        setIsTyping(false);
+        setPhase('waiting_for_agent');
+        return;
+      }
       if (data.action_type === 'show_booking_button' && data.available_slots?.length) {
         addMessage('bot', data.answer || '');
         setSlots(data.available_slots);
@@ -946,6 +992,7 @@ export default function ChatWidget() {
 
   const showInput = phase === 'chat' || phase === 'takeover';
   const showBookingBtn = phase === 'booking_confirm';
+  const showWaiting = phase === 'waiting_for_agent';
 
   return (
     <>
@@ -1110,6 +1157,27 @@ export default function ChatWidget() {
               <div className="text-center py-4 space-y-2">
                 <div className="text-3xl">✅</div>
                 <p className="text-sm text-zinc-300">Spotkanie potwierdzone!</p>
+              </div>
+            )}
+
+            {/* Waiting for agent */}
+            {showWaiting && (
+              <div className="flex flex-col items-center justify-center py-6 gap-4">
+                <div className="relative flex items-center justify-center w-12 h-12">
+                  <div className="absolute inset-0 rounded-full border-2 border-blue-500/20 animate-ping" />
+                  <div className="w-10 h-10 rounded-full border-2 border-t-blue-400 border-blue-500/20 animate-spin" />
+                </div>
+                <div className="text-center space-y-1">
+                  <p className="text-sm text-zinc-300 font-medium">Oczekiwanie na konsultanta...</p>
+                  <p className="text-xs text-zinc-600">Konsultant napisze do Ciebie tutaj.</p>
+                </div>
+                <button
+                  onClick={cancelHumanRequest}
+                  className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors px-3 py-1.5 rounded-lg"
+                  style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.03)' }}
+                >
+                  Anuluj i wróć do bota
+                </button>
               </div>
             )}
 
