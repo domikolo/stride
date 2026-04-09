@@ -9,7 +9,7 @@ type Phase = 'chat' | 'booking_confirm' | 'booking' | 'contact' | 'verifying' | 
 type RatingState = 'hidden' | 'visible' | 'rated' | 'dismissed';
 
 interface Message {
-  role: 'user' | 'bot' | 'agent';
+  role: 'user' | 'bot' | 'agent' | 'info';
   text: string;
   ts: number;
 }
@@ -646,7 +646,6 @@ export default function ChatWidget() {
   const wsRef = useRef<WebSocket | null>(null);
   const wsReconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wsHeartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const wsConnectedOnceRef = useRef(false);
   const lastAgentTsRef = useRef<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionId = useRef('');
@@ -675,7 +674,6 @@ export default function ChatWidget() {
   const wsDisconnect = useCallback(() => {
     if (wsReconnectRef.current) { clearTimeout(wsReconnectRef.current); wsReconnectRef.current = null; }
     if (wsHeartbeatRef.current) { clearInterval(wsHeartbeatRef.current); wsHeartbeatRef.current = null; }
-    wsConnectedOnceRef.current = false;
     if (wsRef.current) {
       wsRef.current.onclose = null; // prevent reconnect loop
       wsRef.current.close(1000);
@@ -765,11 +763,9 @@ export default function ChatWidget() {
 
     ws.onopen = () => {
       startHeartbeat();
-      // On reconnect (not first connect): sync state that may have changed during disconnect
-      if (wsConnectedOnceRef.current) {
-        checkStatus();
-      }
-      wsConnectedOnceRef.current = true;
+      // Always check status on connect — resolves race conditions (admin took over
+      // before WS was ready) and recovers missed events after reconnects
+      checkStatus();
     };
 
     ws.onmessage = (e) => {
@@ -779,6 +775,11 @@ export default function ChatWidget() {
         if (data.type === 'takeover_started') {
           setTakenOver(true);
           setPhase('takeover');
+          setMessages(prev => [...prev, {
+            role: 'info' as const,
+            text: 'Konsultant przejął rozmowę',
+            ts: Math.floor(Date.now() / 1000),
+          }]);
         } else if (data.type === 'takeover_ended') {
           setTakenOver(false);
           setPhase('chat');
@@ -1204,20 +1205,36 @@ export default function ChatWidget() {
 
             {/* Messages */}
             {messages.map((msg, i) => (
-              <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div
-                  className="rounded-xl px-3.5 py-2.5 text-sm leading-relaxed"
-                  style={{
-                    maxWidth: '85%',
-                    lineHeight: '1.5',
-                    background: '#1a1a1e',
-                    border: msg.role === 'user' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255,255,255,0.04)',
-                    color: msg.role === 'user' ? '#ffffff' : '#e4e4e7',
-                  }}
-                >
-                  {msg.role === 'user' ? msg.text : <RenderMarkdown text={msg.text} />}
+              msg.role === 'info' ? (
+                // Separator / system message
+                <div key={i} className="flex items-center gap-2 py-1">
+                  <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                  <span className="text-[10px] text-zinc-600">{msg.text}</span>
+                  <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
                 </div>
-              </div>
+              ) : (
+                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                  {msg.role === 'agent' && (
+                    <span className="text-[10px] mb-1 ml-1" style={{ color: 'rgba(96,165,250,0.6)' }}>Konsultant</span>
+                  )}
+                  <div
+                    className="rounded-xl px-3.5 py-2.5 text-sm leading-relaxed"
+                    style={{
+                      maxWidth: '85%',
+                      lineHeight: '1.5',
+                      background: msg.role === 'agent' ? 'rgba(59,130,246,0.06)' : '#1a1a1e',
+                      border: msg.role === 'user'
+                        ? '1px solid rgba(255,255,255,0.08)'
+                        : msg.role === 'agent'
+                          ? '1px solid rgba(59,130,246,0.18)'
+                          : '1px solid rgba(255,255,255,0.04)',
+                      color: msg.role === 'user' ? '#ffffff' : '#e4e4e7',
+                    }}
+                  >
+                    {msg.role === 'user' ? msg.text : <RenderMarkdown text={msg.text} />}
+                  </div>
+                </div>
+              )
             ))}
 
             {/* Typing indicator */}
