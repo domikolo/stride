@@ -720,11 +720,10 @@ export default function ChatWidget() {
           setTakenOver(false);
           setPhase('chat');
           setMessages(prev => [...prev, {
-            role: 'bot' as const,
-            text: 'Konsultant zakończył rozmowę. Możesz dalej zadawać pytania.',
+            role: 'info' as const,
+            text: 'Konsultant zakończył rozmowę. Możesz dalej pisać.',
             ts: Math.floor(Date.now() / 1000),
           }]);
-          wsDisconnect();
           return;
         }
         if (currentPhase === 'waiting_for_agent') {
@@ -736,11 +735,10 @@ export default function ChatWidget() {
             // Full cycle (takeover + release) happened while widget was disconnected
             setPhase('chat');
             setMessages(prev => [...prev, {
-              role: 'bot' as const,
-              text: 'Konsultant zakończył rozmowę. Możesz dalej zadawać pytania.',
+              role: 'info' as const,
+              text: 'Konsultant zakończył rozmowę. Możesz dalej pisać.',
               ts: Math.floor(Date.now() / 1000),
             }]);
-            wsDisconnect();
             return;
           }
         }
@@ -784,11 +782,10 @@ export default function ChatWidget() {
           setTakenOver(false);
           setPhase('chat');
           setMessages(prev => [...prev, {
-            role: 'bot' as const,
-            text: 'Konsultant zakończył rozmowę. Możesz dalej zadawać pytania.',
+            role: 'info' as const,
+            text: 'Konsultant zakończył rozmowę. Możesz dalej pisać.',
             ts: Math.floor(Date.now() / 1000),
           }]);
-          wsDisconnect();
         } else if (data.type === 'new_message' && data.message) {
           const m = data.message;
           // Only show agent messages (sent_by starts with "agent:")
@@ -803,8 +800,8 @@ export default function ChatWidget() {
     ws.onclose = (e) => {
       if (wsHeartbeatRef.current) { clearInterval(wsHeartbeatRef.current); wsHeartbeatRef.current = null; }
       wsRef.current = null;
-      // Reconnect if still in waiting/takeover phase (abnormal close)
-      if (e.code !== 1000 && (phaseRef.current === 'waiting_for_agent' || phaseRef.current === 'takeover')) {
+      // Reconnect on abnormal close (as long as widget has messages, i.e. WS should be active)
+      if (e.code !== 1000 && phaseRef.current !== 'confirmed') {
         wsReconnectRef.current = setTimeout(wsConnect, 3000);
       }
     };
@@ -812,14 +809,16 @@ export default function ChatWidget() {
     ws.onerror = () => { ws.close(); };
   }, [wsDisconnect]);
 
-  // Connect WS when entering waiting/takeover, disconnect when leaving
+  // Connect WS after first message — stays connected through all phases so admin takeover
+  // events arrive even when user is in 'chat' phase (admin-initiated takeover scenario)
   useEffect(() => {
-    if (phase === 'waiting_for_agent' || phase === 'takeover') {
-      wsConnect();
-    } else {
-      wsDisconnect();
-    }
-  }, [phase, wsConnect, wsDisconnect]);
+    if (messages.length > 0) wsConnect();
+  }, [messages.length, wsConnect]);
+
+  // Disconnect WS when widget is closed
+  useEffect(() => {
+    if (!isOpen) wsDisconnect();
+  }, [isOpen, wsDisconnect]);
 
   const scheduleTimer = (fn: () => void, ms: number) => {
     const id = setTimeout(fn, ms);
@@ -966,9 +965,8 @@ export default function ChatWidget() {
   };
 
   const cancelHumanRequest = useCallback(() => {
-    wsDisconnect();
     setPhase('chat');
-  }, [wsDisconnect]);
+  }, []);
 
   const sendMessage = async () => {
     const text = inputValue.trim();
