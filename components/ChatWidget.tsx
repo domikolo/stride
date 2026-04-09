@@ -645,6 +645,9 @@ export default function ChatWidget() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const wsReconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wsHeartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const wsConnectedOnceRef = useRef(false);
+  const lastAgentTsRef = useRef<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionId = useRef('');
   const phaseRef = useRef<Phase>('chat');
@@ -671,6 +674,8 @@ export default function ChatWidget() {
 
   const wsDisconnect = useCallback(() => {
     if (wsReconnectRef.current) { clearTimeout(wsReconnectRef.current); wsReconnectRef.current = null; }
+    if (wsHeartbeatRef.current) { clearInterval(wsHeartbeatRef.current); wsHeartbeatRef.current = null; }
+    wsConnectedOnceRef.current = false;
     if (wsRef.current) {
       wsRef.current.onclose = null; // prevent reconnect loop
       wsRef.current.close(1000);
@@ -686,27 +691,116 @@ export default function ChatWidget() {
     const ws = new WebSocket(url);
     wsRef.current = ws;
 
+    const startHeartbeat = () => {
+      if (wsHeartbeatRef.current) clearInterval(wsHeartbeatRef.current);
+      wsHeartbeatRef.current = setInterval(() => {
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
+          wsRef.current.send(JSON.stringify({ action: 'ping' }));
+        }
+      }, 8 * 60 * 1000);
+    };
+
+    // Check current takeover status via REST — used on reconnect to catch events missed
+    // during disconnect, and to recover agent messages sent while WS was down.
+    const checkStatus = async () => {
+      if (!CHATBOT_API || !sessionId.current) return;
+      try {
+        const res = await fetch(CHATBOT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'poll',
+            conversation_id: sessionId.current,
+            last_seen_timestamp: lastAgentTsRef.current,
+          }),
+        });
+        const data = await res.json();
+        const currentPhase = phaseRef.current;
+
+        if (currentPhase === 'takeover' && !data.taken_over) {
+          // Agent released while widget was disconnected
+          setTakenOver(false);
+          setPhase('chat');
+          setMessages(prev => [...prev, {
+            role: 'bot' as const,
+            text: 'Konsultant zakończył rozmowę. Możesz dalej zadawać pytania.',
+            ts: Math.floor(Date.now() / 1000),
+          }]);
+          wsDisconnect();
+          return;
+        }
+        if (currentPhase === 'waiting_for_agent') {
+          if (data.taken_over) {
+            // Agent took over while widget was disconnected
+            setTakenOver(true);
+            setPhase('takeover');
+          } else if (!data.human_requested) {
+            // Full cycle (takeover + release) happened while widget was disconnected
+            setPhase('chat');
+            setMessages(prev => [...prev, {
+              role: 'bot' as const,
+              text: 'Konsultant zakończył rozmowę. Możesz dalej zadawać pytania.',
+              ts: Math.floor(Date.now() / 1000),
+            }]);
+            wsDisconnect();
+            return;
+          }
+        }
+
+        // Add any agent messages missed during disconnect
+        if (data.messages?.length) {
+          setMessages(prev => {
+            const existingTs = new Set(prev.map((m: Message) => m.ts));
+            const newMsgs = (data.messages as Array<{ text: string; timestamp: number }>)
+              .filter(m => !existingTs.has(m.timestamp))
+              .map(m => ({ role: 'agent' as const, text: m.text, ts: m.timestamp }));
+            if (!newMsgs.length) return prev;
+            return [...prev, ...newMsgs].sort((a, b) => a.ts - b.ts);
+          });
+          const latestTs = Math.max(...(data.messages as Array<{ timestamp: number }>).map(m => m.timestamp));
+          lastAgentTsRef.current = Math.max(lastAgentTsRef.current, latestTs);
+        }
+      } catch { /* ignore — WS is the primary channel */ }
+    };
+
+    ws.onopen = () => {
+      startHeartbeat();
+      // On reconnect (not first connect): sync state that may have changed during disconnect
+      if (wsConnectedOnceRef.current) {
+        checkStatus();
+      }
+      wsConnectedOnceRef.current = true;
+    };
+
     ws.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data);
+        if (data.type === 'pong') return;
         if (data.type === 'takeover_started') {
           setTakenOver(true);
           setPhase('takeover');
         } else if (data.type === 'takeover_ended') {
           setTakenOver(false);
           setPhase('chat');
+          setMessages(prev => [...prev, {
+            role: 'bot' as const,
+            text: 'Konsultant zakończył rozmowę. Możesz dalej zadawać pytania.',
+            ts: Math.floor(Date.now() / 1000),
+          }]);
           wsDisconnect();
         } else if (data.type === 'new_message' && data.message) {
           const m = data.message;
           // Only show agent messages (sent_by starts with "agent:")
           if (m.sentBy && m.sentBy.startsWith('agent:')) {
             setMessages(prev => [...prev, { role: 'agent' as const, text: m.text, ts: m.timestamp }]);
+            lastAgentTsRef.current = Math.max(lastAgentTsRef.current, m.timestamp as number);
           }
         }
       } catch { /* ignore malformed */ }
     };
 
     ws.onclose = (e) => {
+      if (wsHeartbeatRef.current) { clearInterval(wsHeartbeatRef.current); wsHeartbeatRef.current = null; }
       wsRef.current = null;
       // Reconnect if still in waiting/takeover phase (abnormal close)
       if (e.code !== 1000 && (phaseRef.current === 'waiting_for_agent' || phaseRef.current === 'takeover')) {
@@ -877,7 +971,7 @@ export default function ChatWidget() {
 
   const sendMessage = async () => {
     const text = inputValue.trim();
-    if (!text || isTyping || takenOver || phase === 'waiting_for_agent') return;
+    if (!text || isTyping || phase === 'waiting_for_agent') return;
     setInputValue('');
     addMessage('user', text);
     setIsTyping(true);
