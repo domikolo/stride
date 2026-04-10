@@ -646,7 +646,15 @@ export default function ChatWidget() {
   const wsRef = useRef<WebSocket | null>(null);
   const wsReconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wsHeartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const wsPongTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wsReconnectAttemptsRef = useRef<number>(0);
   const lastAgentTsRef = useRef<number>(0);
+  // Typing: last-sent throttle + idle-stop timer
+  const typingStartSentAtRef = useRef<number>(0);
+  const typingIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Agent typing clear timer (stale indicator protection)
+  const agentTypingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [agentTyping, setAgentTyping] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionId = useRef('');
   const phaseRef = useRef<Phase>('chat');
@@ -674,6 +682,11 @@ export default function ChatWidget() {
   const wsDisconnect = useCallback(() => {
     if (wsReconnectRef.current) { clearTimeout(wsReconnectRef.current); wsReconnectRef.current = null; }
     if (wsHeartbeatRef.current) { clearInterval(wsHeartbeatRef.current); wsHeartbeatRef.current = null; }
+    if (wsPongTimerRef.current) { clearTimeout(wsPongTimerRef.current); wsPongTimerRef.current = null; }
+    if (typingIdleTimerRef.current) { clearTimeout(typingIdleTimerRef.current); typingIdleTimerRef.current = null; }
+    if (agentTypingClearRef.current) { clearTimeout(agentTypingClearRef.current); agentTypingClearRef.current = null; }
+    setAgentTyping(false);
+    wsReconnectAttemptsRef.current = 0;
     if (wsRef.current) {
       wsRef.current.onclose = null; // prevent reconnect loop
       wsRef.current.close(1000);
@@ -691,11 +704,17 @@ export default function ChatWidget() {
 
     const startHeartbeat = () => {
       if (wsHeartbeatRef.current) clearInterval(wsHeartbeatRef.current);
+      // Ping every 60s — fast zombie-TCP detection, well below API Gateway 10-min idle timeout.
       wsHeartbeatRef.current = setInterval(() => {
         if (wsRef.current?.readyState === WebSocket.OPEN) {
           wsRef.current.send(JSON.stringify({ action: 'ping' }));
+          // Arm pong timeout — no pong within 15s → force close + reconnect.
+          if (wsPongTimerRef.current) clearTimeout(wsPongTimerRef.current);
+          wsPongTimerRef.current = setTimeout(() => {
+            try { wsRef.current?.close(4000, 'pong-timeout'); } catch { /* ignore */ }
+          }, 15 * 1000);
         }
-      }, 8 * 60 * 1000);
+      }, 60 * 1000);
     };
 
     // Check current takeover status via REST — used on reconnect to catch events missed
@@ -760,6 +779,7 @@ export default function ChatWidget() {
     };
 
     ws.onopen = () => {
+      wsReconnectAttemptsRef.current = 0; // successful connect → reset backoff
       startHeartbeat();
       // Always check status on connect — resolves race conditions (admin took over
       // before WS was ready) and recovers missed events after reconnects
@@ -769,7 +789,21 @@ export default function ChatWidget() {
     ws.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data);
-        if (data.type === 'pong') return;
+        if (data.type === 'pong') {
+          if (wsPongTimerRef.current) { clearTimeout(wsPongTimerRef.current); wsPongTimerRef.current = null; }
+          return;
+        }
+        if (data.type === 'typing_started' && data.actor === 'agent') {
+          setAgentTyping(true);
+          if (agentTypingClearRef.current) clearTimeout(agentTypingClearRef.current);
+          agentTypingClearRef.current = setTimeout(() => setAgentTyping(false), 5000);
+          return;
+        }
+        if (data.type === 'typing_stopped' && data.actor === 'agent') {
+          setAgentTyping(false);
+          if (agentTypingClearRef.current) { clearTimeout(agentTypingClearRef.current); agentTypingClearRef.current = null; }
+          return;
+        }
         if (data.type === 'takeover_started') {
           setTakenOver(true);
           setPhase('takeover');
@@ -799,10 +833,18 @@ export default function ChatWidget() {
 
     ws.onclose = (e) => {
       if (wsHeartbeatRef.current) { clearInterval(wsHeartbeatRef.current); wsHeartbeatRef.current = null; }
+      if (wsPongTimerRef.current) { clearTimeout(wsPongTimerRef.current); wsPongTimerRef.current = null; }
       wsRef.current = null;
-      // Reconnect on abnormal close (as long as widget has messages, i.e. WS should be active)
+      setAgentTyping(false);
+      // Reconnect on abnormal close (as long as widget has messages, i.e. WS should be active).
+      // Exponential backoff: 3s, 6s, 12s, 24s, capped at 30s, max 10 attempts.
       if (e.code !== 1000 && phaseRef.current !== 'confirmed') {
-        wsReconnectRef.current = setTimeout(wsConnect, 3000);
+        const attempt = wsReconnectAttemptsRef.current;
+        if (attempt < 10) {
+          const delay = Math.min(3000 * Math.pow(2, attempt), 30000);
+          wsReconnectAttemptsRef.current = attempt + 1;
+          wsReconnectRef.current = setTimeout(wsConnect, delay);
+        }
       }
     };
 
@@ -814,6 +856,29 @@ export default function ChatWidget() {
   useEffect(() => {
     if (messages.length > 0) wsConnect();
   }, [messages.length, wsConnect]);
+
+  // Typing signal — debounced to at most once per 3s, with a 4s idle auto-stop.
+  // Only meaningful during takeover (agent is actually watching on the other side).
+  const sendTypingStart = useCallback(() => {
+    if (wsRef.current?.readyState !== WebSocket.OPEN) return;
+    if (!sessionId.current) return;
+    const now = Date.now();
+    if (now - typingStartSentAtRef.current > 3000) {
+      try {
+        wsRef.current.send(JSON.stringify({ action: 'typing_start', sessionId: sessionId.current }));
+        typingStartSentAtRef.current = now;
+      } catch { /* ignore */ }
+    }
+    if (typingIdleTimerRef.current) clearTimeout(typingIdleTimerRef.current);
+    typingIdleTimerRef.current = setTimeout(() => {
+      if (wsRef.current?.readyState === WebSocket.OPEN && sessionId.current) {
+        try {
+          wsRef.current.send(JSON.stringify({ action: 'typing_stop', sessionId: sessionId.current }));
+        } catch { /* ignore */ }
+      }
+      typingStartSentAtRef.current = 0;
+    }, 4000);
+  }, []);
 
   // Disconnect WS when widget is closed
   useEffect(() => {
@@ -1244,6 +1309,18 @@ export default function ChatWidget() {
               </div>
             )}
 
+            {/* Agent typing indicator (only during takeover) */}
+            {agentTyping && takenOver && !isTyping && (
+              <div className="self-start flex items-center gap-2 px-1">
+                <div className="rounded-xl px-3 py-2 flex gap-1.5" style={{ background: '#1e3a5f', border: '1px solid rgba(59,130,246,0.3)' }}>
+                  {[0, 1, 2].map(i => (
+                    <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                  ))}
+                </div>
+                <span className="text-[11px] text-blue-400 italic">konsultant pisze...</span>
+              </div>
+            )}
+
             {/* Calendar picker */}
             {phase === 'booking' && slots.length > 0 && (
               <div className="rounded-xl p-3" style={{ background: '#1a1a1e', border: '1px solid rgba(255,255,255,0.04)' }}>
@@ -1334,7 +1411,10 @@ export default function ChatWidget() {
                 ref={inputRef}
                 type="text"
                 value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
+                onChange={e => {
+                  setInputValue(e.target.value);
+                  if (takenOver) sendTypingStart();
+                }}
                 placeholder={takenOver ? 'Wiadomość do konsultanta...' : 'Wpisz pytanie...'}
                 disabled={isTyping}
                 autoComplete="off"
